@@ -1,0 +1,32 @@
+{
+  "30/12/2023": {
+    "time": {
+      "clockInTime": "6:15:45 pm",
+      "breaks": [],
+      "clockOutTime": null
+    },
+    "tasks": [
+      {
+        "id": "30122023t1",
+        "timeAdded": "6:15:49 pm",
+        "task": "task 1 desc",
+        "timeCompleted": "6:16:47 pm",
+        "completed": true
+      },
+      {
+        "id": "30122023t2",
+        "timeAdded": "6:15:55 pm",
+        "task": "task 2 desc",
+        "timeCompleted": "6:16:46 pm",
+        "completed": true
+      },
+      {
+        "id": "30122023t3",
+        "timeAdded": "6:16:05 pm",
+        "task": "task 3 desc",
+        "timeCompleted": "6:16:44 pm",
+        "completed": true
+      }
+    ]
+  }
+}
