@@ -9,8 +9,6 @@ WorkHours Tracker is a simple time and task tracking application built using Nod
 - [Endpoints](#endpoints)
 - [Folder Structure](#folder-structure)
 - [Dependencies](#dependencies)
-- [Contributing](#contributing)
-- [License](#license)
 
 ## Installation
 
