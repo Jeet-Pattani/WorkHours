@@ -1,4 +1,4 @@
-# WorkHours Tracker
+# WorkHours
 
 WorkHours Tracker is a simple time and task tracking application built using Node.js and Express. It allows users to record clock-in/out times, breaks, and manage their tasks throughout the day.
 
