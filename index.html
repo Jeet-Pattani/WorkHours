@@ -32,7 +32,7 @@
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <script>
-    let taskIdCounter = 1;
+    let taskIdCounter = 0;
 
     async function addTask() {
         const taskInput = document.getElementById('taskInput');
@@ -57,14 +57,20 @@
     }
 
     function generateTaskId() {
-        const today = new Date();
-        const formattedDate = `${today.getDate()}${today.getMonth() + 1}${today.getFullYear()}`;
+    const today = new Date();
+    const formattedDate = `${today.getDate()}${today.getMonth() + 1}${today.getFullYear()}`;
 
-        taskIdCounter += 1;
-        const taskId = `${formattedDate}t${taskIdCounter}`;
-
-        return taskId;
+    // Check if taskIdCounter is defined and a number
+    if (typeof taskIdCounter !== 'number' || isNaN(taskIdCounter)) {
+        taskIdCounter = 1; // Initialize taskIdCounter if not a valid number
     }
+
+    taskIdCounter += 1;
+    const taskId = `${formattedDate}t${taskIdCounter}`;
+
+    return taskId;
+}
+
 
     function createTaskItem(task) {
         const taskItem = document.createElement('div');

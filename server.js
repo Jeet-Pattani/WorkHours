@@ -168,22 +168,32 @@ app.post('/complete-task', (req, res) => {
     }
 });
 
-// New route to remove a task
 app.post('/remove-task', async (req, res) => {
     try {
         const { taskId } = req.body;
 
         // Load tasks from data.json with utf8 encoding
-        const data = await fs.readFile(dataFilePath, 'utf8');
+        const data = await fs.promises.readFile(dataFilePath, 'utf8');
         const jsonData = JSON.parse(data);
 
         // Find the task and remove it
+        let taskFound = false;
         Object.keys(jsonData).forEach(dateKey => {
-            jsonData[dateKey].tasks = jsonData[dateKey].tasks.filter(task => task.id !== taskId);
+            jsonData[dateKey].tasks = jsonData[dateKey].tasks.filter(task => {
+                if (task.id === taskId) {
+                    taskFound = true;
+                    return false; // Exclude the task from the array
+                }
+                return true; // Keep other tasks in the array
+            });
         });
 
+        if (!taskFound) {
+            return res.status(400).json('Error: Task not found.');
+        }
+
         // Save the updated tasks to data.json
-        await fs.writeFile(dataFilePath, JSON.stringify(jsonData, null, 2), 'utf8');
+        await fs.promises.writeFile(dataFilePath, JSON.stringify(jsonData, null, 2), 'utf8');
 
         res.json('Task removed successfully');
     } catch (error) {
@@ -191,6 +201,8 @@ app.post('/remove-task', async (req, res) => {
         res.status(500).json('Error removing task');
     }
 });
+
+
 
 
 app.get('/get-tasks', (req, res) => {

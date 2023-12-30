@@ -2,31 +2,45 @@ body {
     font-family: Arial, sans-serif;
     text-align: center;
     margin: 20px;
+    background-color: #121212; /* Dark background color */
+    color: #fff; /* Light text color */
 }
+
 #clockDisplay {
     font-size: 2em;
     margin-bottom: 20px;
+    color: #61dafb; /* Blue clock color */
 }
+
 button {
     font-size: 1em;
     margin: 5px;
     padding: 10px;
     cursor: pointer;
+    background-color: #282c34; /* Dark button background color */
+    color: #61dafb; /* Button text color */
+    border: 1px solid #61dafb; /* Button border color */
 }
 
+/* Additional styles for tasks */
+#taskList {
+    margin-top: 20px;
+}
 
-        /* Additional styles for tasks */
-        #taskList {
-            margin-top: 20px;
-        }
+.taskItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    background-color: #383838; /* Dark task background color */
+    padding: 10px;
+    border-radius: 5px;
+}
 
-        .taskItem {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-        }
+.taskActions button {
+    margin-left: 8px;
+    background-color: #555; /* Dark action button background color */
+    color: #fff; /* Action button text color */
+    border: 1px solid #61dafb; /* Action button border color */
+}
 
-        .taskActions button {
-            margin-left: 8px;
-        }
