@@ -282,3 +282,19 @@ body.dark-mode button#modeToggle .toggleCover {
 /* body.dark-mode button#modeToggle i:first-child {
     transform: translateX(100%);
 } */
+
+@media (max-width:426px){
+    #taskInput{
+        width: 65%;
+    }
+    #taskForm{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 1rem;
+    }
+    .inputGroup{
+        margin-top: 0.7rem;
+    }
+}
