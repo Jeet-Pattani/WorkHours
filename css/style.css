@@ -20,6 +20,7 @@ body {
     --main-bg: #e5eff9; /* Very light bluish background */
     --main-text: #333; /* Dark text color */
     --button-bg: #4caf50; /* Green button background color */
+    --button-bg: #369739; /* Green button background color */
     --button-text: #fff; /* White text inside buttons */
     --task-bg: #cfd8dc; /* Light bluish color for tasks */
     --task-border: #90a4ae; /* Task border color */
