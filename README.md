@@ -19,6 +19,14 @@ WorkHours is a simple time and task tracking application built using Node.js and
    npm install
    node server
 
+### Run using the shortcut
+
+Directly run the app using the batch script. 
+
+1. Change the location of inside the `RunServer.bat` and save it.
+2. Double-click on `RunServer.bat`.
+2. The server will start, and you can access the application in your web browser at [http://localhost:3000/](http://localhost:3000/).
+
 ### Usage
 
 - Open the application in a web browser.
@@ -66,6 +74,7 @@ WorkHours
 |-- index.html
 |-- package.json
 |-- package-lock.json
+|-- RunServer.bat
 |-- css
 |   `-- style.css
 |-- js
@@ -77,6 +86,12 @@ WorkHours
 |-- images
 |   |-- light.jpg
 |   `-- dark.jpg
+|   `-- sun.jpg
+|   `-- moon.jpg
+|   `-- clock-in.jpg
+|   `-- clock-out.jpg
+|   `-- start-break.jpg
+|   `-- end-break.jpg
 ```
 
 ### Dependencies
@@ -85,3 +100,4 @@ WorkHours
 - **Axios:** HTTP client for making requests.
 - **Body-parser:** Middleware to parse HTTP request bodies.
 - **Cors:** Middleware to enable CORS.
+
