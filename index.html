@@ -5,181 +5,49 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WorkHours</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://kit.fontawesome.com/a81f64a541.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
     <div>
+        <!-- Add this button inside the <div> -->
+        <button type="button" id="modeToggle" onclick="toggleMode()">
+            <span class="toggleCover"></span>
+            <i class="fas fa-sun"></i>
+            <i class="fas fa-moon"></i>
+        </button>
+
         <p id="clockDisplay"></p>
-        <button type="button" id="clockInButton" onclick="sendRequest('clock-in');">Clock In</button>
-        <button type="button" id="startBreakButton" onclick="sendRequest('start-break');">Start Break</button>
-        <button type="button" id="endBreakButton" onclick="sendRequest('end-break');">End Break</button>
-        <button type="button" id="clockOutButton" onclick="sendRequest('clock-out');">Clock Out</button>
+        <p id="dateDisplay"></p>
+        <button type="button" id="clockInButton" onclick="sendRequest('clock-in');">
+            <i class="fas fa-sign-in-alt"></i> Clock In
+        </button>
+        <button type="button" id="startBreakButton" onclick="sendRequest('start-break');">
+            <i class="fas fa-coffee"></i> Start Break
+        </button>
+        <button type="button" id="endBreakButton" onclick="sendRequest('end-break');">
+            <i class="fas fa-stopwatch"></i> End Break
+        </button>
+        <button type="button" id="clockOutButton" onclick="sendRequest('clock-out');">
+            <i class="fas fa-sign-out-alt"></i> Clock Out
+        </button>
 
         <!-- Task form -->
         <form id="taskForm">
             <label for="taskInput">Task:</label>
-            <input type="text" id="taskInput" name="taskInput" required>
+            <input type="text" id="taskInput" name="taskInput" placeholder="Enter Your Task" required>
             <button type="button" onclick="addTask()">Add Task</button>
         </form>
 
         <!-- Task list -->
         <div id="taskList"></div>
     </div>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.3/axios.min.js"
-    integrity="sha512-JWQFV6OCC2o2x8x46YrEeFEQtzoNV++r9im8O8stv91YwHNykzIS2TbvAlFdeH0GVlpnyd79W0ZGmffcRi++Bw=="
-    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
-<script>
-    let taskIdCounter = 0;
-
-    async function addTask() {
-        const taskInput = document.getElementById('taskInput');
-        const task = taskInput.value.trim();
-
-        if (task !== '') {
-            try {
-                const currentTime = new Date().toLocaleTimeString();
-                const taskId = generateTaskId();
-
-                await sendRequest('add-task', { taskId, task, timeAdded: currentTime, completed: false });
-
-                const taskItem = createTaskItem({ id: taskId, task });
-
-                document.getElementById('taskList').appendChild(taskItem);
-
-                taskInput.value = '';
-            } catch (error) {
-                console.error('Error:', error);
-            }
-        }
-    }
-
-    function generateTaskId() {
-    const today = new Date();
-    const formattedDate = `${today.getDate()}${today.getMonth() + 1}${today.getFullYear()}`;
-
-    // Check if taskIdCounter is defined and a number
-    if (typeof taskIdCounter !== 'number' || isNaN(taskIdCounter)) {
-        taskIdCounter = 1; // Initialize taskIdCounter if not a valid number
-    }
-
-    taskIdCounter += 1;
-    const taskId = `${formattedDate}t${taskIdCounter}`;
-
-    return taskId;
-}
-
-
-    function createTaskItem(task) {
-        const taskItem = document.createElement('div');
-        taskItem.className = 'taskItem';
-
-        const taskText = document.createElement('span');
-        taskText.textContent = task.task;
-
-        const taskActions = document.createElement('div');
-        taskActions.className = 'taskActions';
-
-        const removeButton = document.createElement('button');
-        removeButton.textContent = 'Remove';
-        removeButton.setAttribute('data-task-id', task.id);
-        removeButton.onclick = removeTask;
-
-        const completeButton = document.createElement('button');
-        completeButton.textContent = 'Complete';
-        completeButton.setAttribute('data-task-id', task.id);
-        completeButton.onclick = completeTask;
-
-        taskActions.appendChild(removeButton);
-        taskActions.appendChild(completeButton);
-
-        taskItem.appendChild(taskText);
-        taskItem.appendChild(taskActions);
-
-        return taskItem;
-    }
-
-    async function loadTasks() {
-        try {
-            const response = await axios.get('http://localhost:3000/get-tasks');
-            const tasks = response.data.tasks;
-
-            if (tasks && tasks.length > 0) {
-                taskIdCounter = tasks.length + 1;
-                tasks.forEach(task => {
-                    const taskItem = createTaskItem(task);
-                    document.getElementById('taskList').appendChild(taskItem);
-                });
-            } else {
-                const noTasksMessage = document.createElement('p');
-                noTasksMessage.textContent = 'No tasks added.';
-                document.getElementById('taskList').appendChild(noTasksMessage);
-            }
-        } catch (error) {
-            console.error('Error:', error);
-        }
-    }
-
-    async function removeTask() {
-        const taskId = this.getAttribute('data-task-id');
-        await sendRequest('remove-task', { taskId });
-        this.closest('.taskItem').remove();
-    }
-
-    async function completeTask() {
-        const taskId = this.getAttribute('data-task-id');
-        const taskText = this.closest('.taskItem').querySelector('span');
-
-        await sendRequest('complete-task', { taskId, timeCompleted: new Date().toLocaleTimeString(), completed: true });
-
-        taskText.style.textDecoration = 'line-through';
-        this.disabled = true;
-        alert('Task completed successfully!');
-    }
-
-    async function getServerTime() {
-        try {
-            const response = await axios.get('http://localhost:3000/get-server-time');
-            return response.data.serverTime;
-        } catch (error) {
-            console.error('Error:', error);
-            return 'Error getting server time';
-        }
-    }
-
-    async function updateClockDisplay() {
-        const serverTime = await getServerTime();
-        document.getElementById('clockDisplay').innerText = serverTime;
-    }
-
-    async function sendRequest(action, data = {}) {
-        try {
-            const response = await axios.post(`http://localhost:3000/${action}`, data, {
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-
-            const resultParagraph = document.createElement('p');
-            resultParagraph.textContent = response.data;
-
-            document.body.appendChild(resultParagraph);
-
-            updateClockDisplay();
-
-            return response.data;
-        } catch (error) {
-            console.error('Error:', error);
-        }
-    }
-
-    window.onload = loadTasks;
-    setInterval(updateClockDisplay, 1000);
-</script>
-
-
+    <script src="js/axios.min.js"></script>
+    <script src="js/Sortable.min.js"></script>
+    <script src="js/SortableConfig.js"></script>
+    <script src="js/script.js"></script>
+    <script src="js/modeSwitch.js"></script>
 </body>
 
 </html>

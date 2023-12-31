@@ -60,10 +60,11 @@ function formatTime(time) {
 
 app.use(express.static(__dirname));
 
-app.get('/get-server-time', (req, res) => {
-    const currentTime = new Date().toLocaleTimeString();
-    res.json({ serverTime: currentTime });
+app.get('/get-server-date-time', (req, res) => {
+    const currentDateTime = new Date().toLocaleString();
+    res.json({ serverDateTime: currentDateTime });
 });
+
 
 app.post('/clock-in', (req, res) => {
     const currentTime = new Date().toLocaleTimeString();
@@ -145,6 +146,27 @@ app.post('/add-task', (req, res) => {
 
     res.send('Task added.');
 });
+
+app.post('/update-task', (req, res) => {
+    const { taskId, updatedTask } = req.body;
+    const data = loadData();
+    const today = new Date().toLocaleDateString();
+
+    if (!data[today]) {
+        data[today] = { time: { clockInTime: null, breaks: [], clockOutTime: null }, tasks: [] };
+    }
+
+    const task = data[today].tasks.find((t) => t.id === taskId);
+
+    if (task) {
+        task.task = updatedTask;
+        saveData(data);
+        res.send('Task updated.');
+    } else {
+        res.status(400).send('Error: Task not found.');
+    }
+});
+
 
 app.post('/complete-task', (req, res) => {
     const currentTime = new Date().toLocaleTimeString();

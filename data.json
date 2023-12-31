@@ -1,29 +1,42 @@
 {
-  "30/12/2023": {
+  "31/12/2023": {
     "time": {
-      "clockInTime": "7:23:45 pm",
+      "clockInTime": "7:17:53 pm",
       "breaks": [
         {
           "type": "Start Break",
-          "time": "7:25:27 pm"
+          "time": "7:17:15 pm"
         },
         {
           "type": "End Break",
-          "time": "7:25:28 pm",
-          "duration": "00:00:01"
-        },
-        {
-          "type": "Start Break",
-          "time": "7:25:29 pm"
-        },
-        {
-          "type": "End Break",
-          "time": "7:25:32 pm",
-          "duration": "00:00:03"
+          "time": "7:17:25 pm",
+          "duration": "00:00:10"
         }
       ],
-      "clockOutTime": "7:25:33 pm"
+      "clockOutTime": "7:18:07 pm"
     },
-    "tasks": []
+    "tasks": [
+      {
+        "id": "31122023t13",
+        "timeAdded": "7:16:56 pm",
+        "task": "Task 1 Description",
+        "timeCompleted": "7:20:01 pm",
+        "completed": true
+      },
+      {
+        "id": "31122023t14",
+        "timeAdded": "7:17:02 pm",
+        "task": "Task 2 Description",
+        "timeCompleted": "7:18:01 pm",
+        "completed": true
+      },
+      {
+        "id": "31122023t15",
+        "timeAdded": "7:17:07 pm",
+        "task": "Task 3 Description",
+        "timeCompleted": "7:21:03 pm",
+        "completed": true
+      }
+    ]
   }
 }

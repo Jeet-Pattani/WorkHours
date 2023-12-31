@@ -1,0 +1,263 @@
+@import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro&display=swap');
+
+*{
+    margin: 0;padding: 0;box-sizing: border-box;
+}
+
+/* For webkit browsers (Chrome, Safari, Edge) */
+body::-webkit-scrollbar {
+    width: 0;
+}
+
+/* For Firefox */
+body {
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent; /* Adjust as needed */
+}
+
+:root {
+    --main-bg: #f5faff; /* Very light bluish background */
+    --main-bg: #e5eff9; /* Very light bluish background */
+    --main-text: #333; /* Dark text color */
+    --button-bg: #4caf50; /* Green button background color */
+    --button-text: #fff; /* White text inside buttons */
+    --task-bg: #cfd8dc; /* Light bluish color for tasks */
+    --task-border: #90a4ae; /* Task border color */
+    --input-bg: #ffffff; /* White background for input field */
+    --input-border: #90a4ae; /* Border color for input field */
+    --input-text: #333; /* Text color for input field */
+    --dark-bg: #121212; /* Dark background color */
+    --dark-text: #efefef; /* Light text color */
+    --dark-btn-bg: #ff5733; /* Reddish-orange button background color */
+    --dark-btn-text: #efefef; /* Light text color for buttons */
+    --dark-task-bg: #1f1f1f; /* Less black background for tasks */
+    --dark-task-border: #333; /* Darker border color for tasks */
+}
+
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 20px;
+    background-color: var(--main-bg);
+    color: var(--main-text);
+    transition: background-color 0.5s, color 0.5s;
+    font-family: 'Source Code Pro', monospace;
+    /* background-image: linear-gradient(to right, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.pexels.com/photos/950210/pexels-photo-950210.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'); */
+    background-image: linear-gradient(to right, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('../images/light.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+button {
+    font-size: 1em;
+    margin: 5px;
+    padding: 10px;
+    cursor: pointer;
+    background-color: var(--button-bg);
+    color: var(--button-text);
+    border: 1px solid var(--button-bg);
+    transition: background-color 0.3s, color 0.3s;
+    border-radius: 3px;
+    font-family: 'Source Code Pro', monospace;
+}
+
+button:hover {
+    background-color: #45a049; /* Darker green on hover */
+}
+
+#clockDisplay {
+    font-size: 2.5em;
+    margin: 20px auto;
+    color: #57d25b;
+}
+
+#dateDisplay {
+    font-size: 1.05em;
+    margin: 10px auto;
+    color: #fff; /* Dark text color */
+}
+
+/* Additional styles for tasks */
+#taskList {
+    margin-top: 20px;
+    background-color: var(--main-bg);
+    color: white;
+    background-color: #e5eff940;
+    backdrop-filter: blur(5px);
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.taskItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    background-color: var(--task-bg);
+    background-color: #e2e2e229;
+    padding: 10px;
+    border: 1px solid var(--task-border);
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.taskItem:hover {
+    background-color: #b0bec5; /* Darker color on hover */
+    background-color: #bebebe77; /* Darker color on hover */
+}
+
+.taskItem span{
+    padding: 5px 8px;
+    color: #fff;
+}
+
+.taskActions button {
+    margin-left: 8px;
+    background-color: var(--button-bg);
+    color: var(--button-text);
+    border: 1px solid var(--button-bg);
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.taskActions button:hover {
+    background-color: #45a049; /* Darker green on hover */
+}
+
+/* Task form */
+#taskForm {
+    margin-top: 20px;
+}
+
+label {
+    /* display: block; */
+    font-size: 1.1rem;
+    margin-bottom: 5px;
+    color: #f2fbff; /* Label text color */
+}
+
+#taskInput {
+    font-size: 1em;
+    padding: 10px;
+    width: 18%;
+    border: 1px solid var(--input-border);
+    border-radius: 5px;
+    background-color: var(--input-bg);
+    color: var(--input-text);
+    font-family: "Source Code Pro", monospace;
+}
+
+button[type="button"] {
+    font-size: 1.1rem;
+    margin-left: 10px;
+    padding: 10px;
+    cursor: pointer;
+    background-color: var(--button-bg);
+    color: var(--button-text);
+    border: 1px solid var(--button-bg);
+    transition: background-color 0.3s, color 0.3s;
+}
+
+button[type="button"]:hover {
+    background-color: #45a049; /* Darker green on hover */
+}
+
+
+body.dark-mode {
+    background-color: var(--dark-bg);
+    color: var(--dark-text);
+    /* background-image: linear-gradient(to right, rgba(0, 0, 0, 0.507), rgba(0, 0, 0, 0.5)), url('https://images.pexels.com/photos/3607542/pexels-photo-3607542.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'); */
+    background-image: linear-gradient(to right, rgba(0, 0, 0, 0.507), rgba(0, 0, 0, 0.5)), url('../images/dark.jpg');
+}
+
+/* Additional styles for tasks in dark mode */
+body.dark-mode #taskList {
+    background-color: var(--dark-bg);
+    background-color: #12121238;
+    backdrop-filter: blur(5px);
+}
+
+body.dark-mode .taskItem {
+    background-color: var(--dark-task-bg);
+    border: 1px solid var(--dark-task-border);
+    background-color: transparent;
+}
+
+body.dark-mode .taskItem:hover {
+    background-color: #00000067; /* Darker color on hover */
+}
+
+body.dark-mode .taskActions button {
+    background-color: var(--dark-btn-bg);
+    color: var(--dark-btn-text);
+    border: 1px solid var(--dark-btn-bg);
+}
+
+
+
+body.dark-mode button[type="button"]{
+    background-color: var(--dark-btn-bg);
+    border: 1px solid var(--dark-btn-bg);
+}
+
+body.dark-mode button[type=button]:hover, body.dark-mode .taskActions button:hover {
+    background-color: #bd4930; /* Darker reddish-orange on hover */
+    color: #fff;
+    border: 1px solid #bd4930;
+}
+
+body.dark-mode p#clockDisplay{
+    color: var(--dark-btn-bg);
+}
+
+body.dark-mode p#dateDisplay{
+    color: var(--dark-text);
+}
+
+body.dark-mode label{
+    color: var(--dark-text);
+}
+
+button#modeToggle {
+    position: relative;
+    font-size: 1.2em;
+    background-color: var(--button-bg);
+    color: var(--dark-btn-text);
+    border: none;
+    cursor: pointer;
+    overflow: hidden;
+    padding: 6px;
+    border-radius: 2rem;
+}
+
+button#modeToggle i {
+    margin: 0 5px;
+    transition: transform 0.3s ease-in-out;
+}
+
+button#modeToggle .toggleCover {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50%;
+    height: 100%;
+    background-color: var(--main-bg);
+    transition: transform 0.3s ease-in-out;
+    transform: translateX(0%);
+    box-shadow: 2px 2px 19px 2px #000000a8;
+    background-color: #c2c2c2;
+    /* border-radius: 50%; */
+}
+
+body.dark-mode button#modeToggle{
+    background-color: var(--dark-btn-bg);
+}
+
+body.dark-mode button#modeToggle .toggleCover {
+    transform: translateX(100%);
+}
+
+/* body.dark-mode button#modeToggle i:first-child {
+    transform: translateX(100%);
+} */
