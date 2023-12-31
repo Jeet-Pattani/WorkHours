@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WorkHours</title>
     <link rel="stylesheet" href="css/style.css">
-    <script src="https://kit.fontawesome.com/a81f64a541.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -20,24 +19,38 @@
 
         <p id="clockDisplay"></p>
         <p id="dateDisplay"></p>
-        <button type="button" id="clockInButton" onclick="sendRequest('clock-in');">
-            <i class="fas fa-sign-in-alt"></i> Clock In
-        </button>
-        <button type="button" id="startBreakButton" onclick="sendRequest('start-break');">
-            <i class="fas fa-coffee"></i> Start Break
-        </button>
-        <button type="button" id="endBreakButton" onclick="sendRequest('end-break');">
-            <i class="fas fa-stopwatch"></i> End Break
-        </button>
-        <button type="button" id="clockOutButton" onclick="sendRequest('clock-out');">
-            <i class="fas fa-sign-out-alt"></i> Clock Out
-        </button>
+        <div class="actionButtons">
+            <button type="button" id="clockInButton" onclick="sendRequest('clock-in');">
+                <div class="btnInWrapper">
+                    <img src="images/clock-in.png" alt=""> <span class="btnText">Clock In</span>
+                </div>
+                
+            </button>
+            <button type="button" id="startBreakButton" onclick="sendRequest('start-break');">
+                <div class="btnInWrapper">
+                    <img src="images/start-break.png" alt=""> <span class="btnText">Start Break</span>
+                </div>
+                
+            </button>
+            <button type="button" id="endBreakButton" onclick="sendRequest('end-break');">
+                <div class="btnInWrapper">
+                    <img src="images/end-break.png" alt=""> <span class="btnText">End Break</span>
+                </div>
+                
+            </button>
+            <button type="button" id="clockOutButton" onclick="sendRequest('clock-out');">
+                <div class="btnInWrapper">
+                    <img src="images/clock-out.png" alt=""> <span class="btnText">Clock Out</span>
+                </div>
+                
+            </button>
+        </div>
 
         <!-- Task form -->
         <form id="taskForm">
             <label for="taskInput">Task:</label>
             <input type="text" id="taskInput" name="taskInput" placeholder="Enter Your Task" required>
-            <button type="button" onclick="addTask()">Add Task</button>
+            <button type="button" onclick="addTask()"> Add Task</button>
         </form>
 
         <!-- Task list -->

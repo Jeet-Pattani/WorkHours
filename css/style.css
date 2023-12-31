@@ -162,6 +162,16 @@ button[type="button"]:hover {
     background-color: #45a049; /* Darker green on hover */
 }
 
+button[type="button"] img{
+    height: 30px;
+    width: 30px;
+}
+
+.actionButtons button .btnInWrapper{
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
 
 body.dark-mode {
     background-color: var(--dark-bg);
