@@ -6,15 +6,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WorkHours</title>
     <link rel="stylesheet" href="css/style.css">
+    <script src="https://kit.fontawesome.com/a81f64a541.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
     <div>
         <!-- Add this button inside the <div> -->
-        <button type="button" id="modeToggle" onclick="toggleMode()">
+        <!-- <button type="button" id="modeToggle" onclick="toggleMode()">
             <span class="toggleCover"></span>
             <i class="fas fa-sun"></i>
             <i class="fas fa-moon"></i>
+        </button> -->
+
+        <button type="button" id="modeToggle" onclick="toggleMode()">
+            <span class="toggleCover"></span>
+            <img src="/images/sun.png" alt="">
+            <img src="/images/moon.png" alt="">
         </button>
 
         <p id="clockDisplay"></p>
