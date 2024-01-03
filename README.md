@@ -18,14 +18,15 @@ WorkHours is a simple time and task tracking application built using Node.js and
    git clone https://github.com/your-username/workhours-tracker.git
    npm install
    node server
+   ```
 
-### Run using the shortcut
+#### Run using the shortcut
 
-Directly run the app using the batch script. 
+Directly run the app using the batch script.
 
-1. Change the location of inside the `RunServer.bat` and save it.
+1. Change the location inside `RunServer.bat` and save it.
 2. Double-click on `RunServer.bat`.
-2. The server will start, and you can access the application in your web browser at [http://localhost:3000/](http://localhost:3000/).
+3. The server will start, and you can access the application in your web browser at [http://localhost:3000/](http://localhost:3000/).
 
 ### Usage
 
@@ -38,6 +39,9 @@ Directly run the app using the batch script.
 - **GET /get-server-date-time:**
   Get the current server date and time.
 
+- **GET /get-summary:**
+  Get a summary of the work session, including total work duration, total break duration, number of breaks, and break details.
+
 - **POST /clock-in:**
   Record the clock-in time.
 
@@ -49,6 +53,9 @@ Directly run the app using the batch script.
 
 - **POST /clock-out:**
   Record the clock-out time.
+
+- **GET /get-user-status:**
+  Know if user is clocked-in,clocked-out,on-break,back-to-work,not-on-work
 
 - **POST /add-task:**
   Add a new task.
@@ -100,4 +107,3 @@ WorkHours
 - **Axios:** HTTP client for making requests.
 - **Body-parser:** Middleware to parse HTTP request bodies.
 - **Cors:** Middleware to enable CORS.
-

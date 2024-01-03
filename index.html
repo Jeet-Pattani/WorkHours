@@ -19,12 +19,26 @@
 
 <body>
     <div>
+        <!-- Modal -->
+        <div id="summaryModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal()">&times;</span>
+                <h2>Summary</h2>
+                <p id="totalWorkDuration"></p>
+                <p id="totalBreakDuration"></p>
+                <p id="numberOfBreaks"></p>
+                <h3>Break Details</h3>
+                <div id="breakDetailsTable">
+                    <table id="breakDetails"></table>
+                </div>
+            </div>
+        </div>
         <button type="button" id="modeToggle" onclick="toggleMode()">
             <span class="toggleCover"></span>
             <img src="/images/moon.png" alt="">
             <img src="/images/sun.png" alt="">
         </button>
-
+        <div id="statusIndicator">Status: Not Clocked In</div>
         <p id="clockDisplay"></p>
         <p id="dateDisplay"></p>
         <div class="actionButtons">
@@ -71,6 +85,7 @@
     <script src="js/SortableConfig.js"></script>
     <script src="js/script.js"></script>
     <script src="js/modeSwitch.js"></script>
+    <script src="js/userStatus.js"></script>
 </body>
 
 </html>

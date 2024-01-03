@@ -99,8 +99,7 @@ async function loadTasks() {
     try {
         const response = await axios.get('http://localhost:3000/get-tasks');
         const tasks = response.data.tasks;
-        console.log(response.data);
-        
+      
         const taskList = document.getElementById('taskList');
         taskList.innerHTML = ''; // Clear existing content
 
@@ -216,6 +215,73 @@ async function updateTask(taskId, updatedTask) {
 //         updatedTaskInput.value = '';
 //     }
 // }
+
+// Function to open the modal and update its content
+function openModal(summary) {
+    const modal = document.getElementById('summaryModal');
+    modal.style.display = 'block';
+
+    // Update modal content
+    document.getElementById('totalWorkDuration').textContent = `Total Work Duration: ${summary.totalWorkDuration}`;
+    document.getElementById('totalBreakDuration').textContent = `Total Break Duration: ${summary.totalBreakDuration}`;
+    document.getElementById('numberOfBreaks').textContent = `Number of Breaks: ${summary.numberOfBreaks}`;
+
+    const breakDetailsTable = document.getElementById('breakDetails');
+    breakDetailsTable.innerHTML = ''; // Clear existing content
+
+    // Create table header
+    const tableHeader = breakDetailsTable.createTHead();
+    const headerRow = tableHeader.insertRow();
+    const headerSrNo = headerRow.insertCell(0);
+    const headerStartBreak = headerRow.insertCell(1);
+    const headerEndBreak = headerRow.insertCell(2);
+    const headerDuration = headerRow.insertCell(3);
+
+    headerSrNo.textContent = 'Sr. No';
+    headerStartBreak.textContent = 'Start Break';
+    headerEndBreak.textContent = 'End Break';
+    headerDuration.textContent = 'Duration';
+
+    // Create table body
+    const tableBody = breakDetailsTable.createTBody();
+
+    let currentRow = null;
+
+    // Add break details to the table
+    summary.breakDetails.forEach((breakDetail, index) => {
+        if (breakDetail.type === 'Start Break') {
+            currentRow = tableBody.insertRow();
+            currentRow.insertCell(0).textContent = index + 1;
+            currentRow.insertCell(1).textContent = breakDetail.time;
+        } else if (breakDetail.type === 'End Break') {
+            currentRow.insertCell(2).textContent = breakDetail.time;
+            currentRow.insertCell(3).textContent = breakDetail.duration || '';
+            currentRow = null; // Reset current row
+        }
+    });
+
+    // Handle the case where "End Break" is missing for the last "Start Break"
+    if (currentRow) {
+        currentRow.insertCell(2).textContent = '';
+        currentRow.insertCell(3).textContent = '';
+    }
+}
+
+// Function to close the modal
+function closeModal() {
+    const modal = document.getElementById('summaryModal');
+    modal.style.display = 'none';
+}
+
+document.getElementById('clockOutButton').addEventListener('click', async () => {
+    try {
+        const response = await axios.get('http://localhost:3000/get-summary');
+        openModal(response.data);
+    } catch (error) {
+        console.error('Error getting summary:', error);
+    }
+});
+
 
 
 window.onload = loadTasks;

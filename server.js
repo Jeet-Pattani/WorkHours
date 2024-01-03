@@ -21,6 +21,7 @@ function loadData() {
     }
 }
 
+
 function saveData(data) {
     fs.writeFileSync(dataFilePath, JSON.stringify(data, null, 2), 'utf8');
 }
@@ -65,21 +66,22 @@ app.get('/get-server-date-time', (req, res) => {
     res.json({ serverDateTime: currentDateTime });
 });
 
-
 app.post('/clock-in', (req, res) => {
     const currentTime = new Date().toLocaleTimeString();
     const data = loadData();
     const today = new Date().toLocaleDateString();
 
     if (!data[today]) {
-        data[today] = { time: { clockInTime: currentTime, breaks: [], clockOutTime: null }, tasks: [] };
+        data[today] = { time: { clockInTime: currentTime, breaks: [], clockOutTime: null }, tasks: [], userStatus: 'clocked-in' };
     } else {
         data[today].time.clockInTime = currentTime;
+        data[today].userStatus = 'clocked-in';
     }
 
     saveData(data);
     res.send('Clock In recorded.');
 });
+
 
 app.post('/start-break', (req, res) => {
     const currentTime = new Date().toLocaleTimeString();
@@ -87,10 +89,11 @@ app.post('/start-break', (req, res) => {
     const today = new Date().toLocaleDateString();
 
     if (!data[today]) {
-        data[today] = { time: { clockInTime: null, breaks: [], clockOutTime: null }, tasks: [] };
+        data[today] = { time: { clockInTime: null, breaks: [], clockOutTime: null }, tasks: [], userStatus: 'not on work' };
     }
 
     data[today].time.breaks.push({ type: 'Start Break', time: currentTime });
+    data[today].userStatus = 'on-break'; // Update user status
     saveData(data);
     res.send('Break started.');
 });
@@ -106,6 +109,7 @@ app.post('/end-break', (req, res) => {
         const breakDuration = calculateTimeDifference(lastBreakStart.time, currentTime);
 
         timeData.breaks.push({ type: 'End Break', time: currentTime, duration: breakDuration });
+        data[today].userStatus = 'back-to-work'; // Update user status
         saveData(data);
         res.send(`Break ended. Break duration: ${breakDuration}`);
     } else {
@@ -123,10 +127,40 @@ app.post('/clock-out', (req, res) => {
         const totalBreakDuration = calculateTotalBreakDuration(timeData.breaks);
         const workDuration = calculateTimeDifference(timeData.clockInTime, currentTime);
         timeData.clockOutTime = currentTime;
+        data[today].userStatus = 'clocked-out'; // Update user status
         saveData(data);
         res.send(`Clock Out recorded. Work duration: ${workDuration}, Total Break duration: ${totalBreakDuration}`);
     } else {
         res.status(400).send('Error: Clock In not recorded.');
+    }
+});
+
+
+app.get('/get-summary', (req, res) => {
+    const data = loadData();
+    const today = new Date().toLocaleDateString();
+    const timeData = data[today] ? data[today].time : null;
+
+    if (timeData) {
+        const totalWorkDuration = calculateTimeDifference(timeData.clockInTime, timeData.clockOutTime);
+        const totalBreakDuration = calculateTotalBreakDuration(timeData.breaks);
+        const numberOfBreaks = (timeData.breaks.length)/2;//divide by because start and end break are recorded separately in data.json
+
+        // Extract start and end times of each break
+        const breakDetails = timeData.breaks.map((breakEntry) => ({
+            type: breakEntry.type,
+            time: breakEntry.time,
+            duration: breakEntry.duration,
+        }));
+
+        res.json({
+            totalWorkDuration,
+            totalBreakDuration,
+            numberOfBreaks,
+            breakDetails,
+        });
+    } else {
+        res.status(400).json('Error: No data available for today.');
     }
 });
 
@@ -166,7 +200,6 @@ app.post('/update-task', (req, res) => {
         res.status(400).send('Error: Task not found.');
     }
 });
-
 
 app.post('/complete-task', (req, res) => {
     const currentTime = new Date().toLocaleTimeString();
@@ -224,7 +257,17 @@ app.post('/remove-task', async (req, res) => {
     }
 });
 
+app.get('/get-user-status', (req, res) => {
+    const data = loadData();
+    const today = new Date().toLocaleDateString();
 
+    if (data[today] && data[today].userStatus) {
+        const userStatus = data[today].userStatus;
+        res.json({ userStatus });
+    } else {
+        res.json({ userStatus: 'Not on Work' }); // Default status if not found
+    }
+});
 
 
 app.get('/get-tasks', (req, res) => {
