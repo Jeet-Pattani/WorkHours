@@ -1,219 +1,72 @@
 {
-  "31/12/2023": {
+  "29/1/2024": {
     "time": {
-      "clockInTime": "7:17:53 pm",
+      "clockInTime": "29/01/2024 21:42:36",
       "breaks": [
         {
           "type": "Start Break",
-          "time": "7:17:15 pm"
+          "time": "29/01/2024 21:35:32"
         },
         {
           "type": "End Break",
-          "time": "7:17:25 pm",
-          "duration": "00:00:10"
-        }
-      ],
-      "clockOutTime": "7:18:07 pm"
-    },
-    "tasks": []
-  },
-  "1/1/2024": {
-    "time": {
-      "clockInTime": "5:41:28 PM",
-      "breaks": [
+          "time": "29/01/2024 21:35:40",
+          "duration": "00:00:08"
+        },
         {
           "type": "Start Break",
-          "time": "4:41:00 PM"
+          "time": "29/01/2024 21:36:07"
         },
         {
           "type": "End Break",
-          "time": "4:41:03 PM",
-          "duration": "00:00:03"
+          "time": "29/01/2024 21:36:18",
+          "duration": "00:00:11"
         },
         {
           "type": "Start Break",
-          "time": "4:56:36 PM"
-        },
-        {
-          "type": "Start Break",
-          "time": "4:58:08 PM"
+          "time": "29/01/2024 21:36:27"
         },
         {
           "type": "End Break",
-          "time": "4:58:11 PM",
-          "duration": "00:00:03"
-        },
-        {
-          "type": "Start Break",
-          "time": "5:12:26 PM"
-        },
-        {
-          "type": "Start Break",
-          "time": "5:14:43 PM"
-        },
-        {
-          "type": "End Break",
-          "time": "5:14:46 PM",
-          "duration": "00:00:03"
-        },
-        {
-          "type": "Start Break",
-          "time": "5:33:03 PM"
-        },
-        {
-          "type": "End Break",
-          "time": "5:33:08 PM",
+          "time": "29/01/2024 21:36:32",
           "duration": "00:00:05"
         },
         {
           "type": "Start Break",
-          "time": "5:41:35 PM"
+          "time": "29/01/2024 21:41:19"
         },
         {
           "type": "End Break",
-          "time": "5:41:41 PM",
-          "duration": "00:00:06"
+          "time": "29/01/2024 21:41:21",
+          "duration": "00:00:02"
         },
         {
           "type": "Start Break",
-          "time": "5:41:50 PM"
+          "time": "29/01/2024 21:42:40"
         },
         {
           "type": "End Break",
-          "time": "5:41:57 PM",
-          "duration": "00:00:07"
+          "time": "29/01/2024 21:42:45",
+          "duration": "00:00:05"
         }
       ],
-      "clockOutTime": "6:02:46 PM"
+      "clockOutTime": "30/01/2024 06:41:23"
     },
     "tasks": [
       {
-        "id": "112024t2",
-        "timeAdded": "5:21:00 PM",
-        "task": "Loose bell wire",
-        "timeCompleted": null,
-        "completed": false
+        "id": "2912024t8",
+        "timeAdded": "9:54:58 pm",
+        "task": "some text some dummy text lorem ipsum dolor sit amet adipiscing",
+        "timeCompleted": "10:40:45 pm",
+        "completed": true
       },
       {
-        "id": "112024t3",
-        "timeAdded": "5:28:20 PM",
-        "task": "complete tiny webdev llm",
+        "id": "2912024t9",
+        "timeAdded": "10:48:08 pm",
+        "task": "Write a README.md for WorkHours",
         "timeCompleted": null,
         "completed": false
       }
-    ]
-  },
-  "3/1/2024": {
-    "time": {
-      "clockInTime": "8:18:19 pm",
-      "breaks": [
-        {
-          "type": "Start Break",
-          "time": "12:41:12 pm"
-        },
-        {
-          "type": "End Break",
-          "time": "12:41:16 pm",
-          "duration": "00:00:04"
-        },
-        {
-          "type": "Start Break",
-          "time": "12:41:32 pm"
-        },
-        {
-          "type": "End Break",
-          "time": "12:41:36 pm",
-          "duration": "00:00:04"
-        },
-        {
-          "type": "Start Break",
-          "time": "12:41:38 pm"
-        },
-        {
-          "type": "End Break",
-          "time": "12:41:43 pm",
-          "duration": "00:00:05"
-        },
-        {
-          "type": "Start Break",
-          "time": "12:41:50 pm"
-        },
-        {
-          "type": "Start Break",
-          "time": "12:41:53 pm"
-        },
-        {
-          "type": "End Break",
-          "time": "12:42:00 pm",
-          "duration": "00:00:07"
-        },
-        {
-          "type": "Start Break",
-          "time": "6:42:13 pm"
-        },
-        {
-          "type": "End Break",
-          "time": "6:42:18 pm",
-          "duration": "00:00:05"
-        },
-        {
-          "type": "Start Break",
-          "time": "6:59:24 pm"
-        },
-        {
-          "type": "End Break",
-          "time": "6:59:31 pm",
-          "duration": "00:00:07"
-        },
-        {
-          "type": "Start Break",
-          "time": "7:19:28 pm"
-        },
-        {
-          "type": "End Break",
-          "time": "7:19:29 pm",
-          "duration": "00:00:01"
-        },
-        {
-          "type": "Start Break",
-          "time": "8:14:42 pm"
-        },
-        {
-          "type": "End Break",
-          "time": "8:14:44 pm",
-          "duration": "00:00:02"
-        },
-        {
-          "type": "End Break",
-          "time": "8:15:33 pm",
-          "duration": "00:00:49"
-        },
-        {
-          "type": "End Break",
-          "time": "8:15:34 pm",
-          "duration": "00:00:01"
-        },
-        {
-          "type": "Start Break",
-          "time": "8:15:39 pm"
-        },
-        {
-          "type": "End Break",
-          "time": "8:15:41 pm",
-          "duration": "00:00:02"
-        },
-        {
-          "type": "Start Break",
-          "time": "8:18:20 pm"
-        },
-        {
-          "type": "End Break",
-          "time": "8:18:22 pm",
-          "duration": "00:00:02"
-        }
-      ],
-      "clockOutTime": "8:18:23 pm"
-    },
-    "tasks": []
+    ],
+    "userStatus": "back-to-work"
   }
 }

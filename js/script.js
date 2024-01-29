@@ -7,13 +7,12 @@ async function addTask() {
     if (task !== '') {
         try {
             const currentTime = new Date().toLocaleTimeString();
-            const taskId = generateTaskId();
 
-            await sendRequest('add-task', { taskId, task, timeAdded: currentTime, completed: false });
+            // Send the task to the backend
+            await sendRequest('add-task', { task, completed: false, timeAdded: currentTime });
 
-            const taskItem = createTaskItem({ id: taskId, task });
-
-            document.getElementById('taskList').appendChild(taskItem);
+            // Fetch and load tasks after adding a task
+            await loadTasks();
 
             taskInput.value = '';
         } catch (error) {
@@ -22,20 +21,6 @@ async function addTask() {
     }
 }
 
-function generateTaskId() {
-    const today = new Date();
-    const formattedDate = `${today.getDate()}${today.getMonth() + 1}${today.getFullYear()}`;
-
-    // Check if taskIdCounter is defined and a number
-    if (typeof taskIdCounter !== 'number' || isNaN(taskIdCounter)) {
-        taskIdCounter = 1; // Initialize taskIdCounter if not a valid number
-    }
-
-    taskIdCounter += 1;
-    const taskId = `${formattedDate}t${taskIdCounter}`;
-
-    return taskId;
-}
 // Add this function to handle the contenteditable behavior
 function enableTaskEditing(taskId) {
     const taskText = document.querySelector(`.taskItem[data-task-id="${taskId}"] > span`);
@@ -142,7 +127,7 @@ async function completeTask() {
 
     taskText.style.textDecoration = 'line-through';
     this.disabled = true;
-    alert('Task completed successfully!');
+    // alert('Task completed successfully!');
 }
 
 async function getServerTime() {
@@ -192,13 +177,17 @@ async function sendRequest(action, data = {}) {
 async function updateTask(taskId, updatedTask) {
     try {
         await sendRequest('update-task', { taskId, updatedTask });
-        // Reload tasks after updating
-        //await loadTasks();
-        window.location.reload(); //refreshing the page to show the updated values
+        
+        // Find the task item in the DOM and update its text content
+        const taskItem = document.querySelector(`.taskItem[data-task-id="${taskId}"] > span`);
+        if (taskItem) {
+            taskItem.textContent = updatedTask;
+        }
     } catch (error) {
         console.error('Error updating task:', error);
     }
 }
+
 
 // function updateTaskDescription() {
 //     const updatedTaskInput = document.getElementById('updatedTaskInput');

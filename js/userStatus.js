@@ -25,7 +25,7 @@ async function updateUserStatus() {
 function transformUserStatus(status) {
   return status
     ? status.replace(/-/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase())
-    : 'Not on Work';
+    : 'Not at Work';
 }
 
 // Fetch user status and update UI on page load
