@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Work Hours Tracker</title>
+</head>
+<body>
+
+<h1>Work Hours Tracker</h1>
+
+<div>
+    <h2>User Status</h2>
+    <p id="userStatus"></p>
+</div>
+
+<div>
+    <h2>Clock In/Out</h2>
+    <button onclick="clockIn()">Clock In</button>
+    <button onclick="startBreak()">Start Break</button>
+    <button onclick="endBreak()">End Break</button>
+    <button onclick="clockOut()">Clock Out</button>
+</div>
+
+<div>
+    <h2>Tasks</h2>
+    <input type="text" id="taskInput" placeholder="Enter task">
+    <button onclick="addTask()">Add Task</button>
+    <div id="taskList"></div>
+</div>
+
+<div>
+    <h2>Summary</h2>
+    <button id="getSummary">Get Summary</button>
+</div>
+
+<!-- Include Axios library for making HTTP requests -->
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<script>
+    async function clockIn() {
+        await sendRequest('clock-in');
+        loadUserStatus();
+    }
+
+    async function startBreak() {
+        await sendRequest('start-break');
+        loadUserStatus();
+    }
+
+    async function endBreak() {
+        await sendRequest('end-break');
+        loadUserStatus();
+    }
+
+    async function clockOut() {
+        await sendRequest('clock-out');
+        loadUserStatus();
+    }
+
+    async function addTask() {
+        const taskInput = document.getElementById('taskInput');
+        const task = taskInput.value.trim();
+
+        if (task !== '') {
+            await sendRequest('add-task', { task });
+            loadTasks();
+            taskInput.value = '';
+        }
+    }
+
+    async function removeTask(taskId) {
+        await sendRequest('remove-task', { taskId });
+        loadTasks();
+    }
+
+    async function completeTask(taskId) {
+        await sendRequest('complete-task', { taskId });
+        loadTasks();
+    }
+
+    async function loadUserStatus() {
+        try {
+            const response = await axios.get('http://localhost:3000/get-user-status');
+            document.getElementById('userStatus').innerText = `User Status: ${response.data.userStatus}`;
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+    async function loadTasks() {
+        try {
+            const response = await axios.get('http://localhost:3000/get-tasks');
+            const tasks = response.data.tasks;
+
+            const taskList = document.getElementById('taskList');
+            taskList.innerHTML = ''; // Clear existing content
+
+            if (tasks && tasks.length > 0) {
+                tasks.forEach(task => {
+                    const taskItem = createTaskItem(task);
+                    taskList.appendChild(taskItem);
+                });
+            } else {
+                const noTasksMessage = document.createElement('p');
+                noTasksMessage.textContent = 'No tasks added.';
+                taskList.appendChild(noTasksMessage);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+    function createTaskItem(task) {
+        const taskItem = document.createElement('div');
+        taskItem.className = 'taskItem';
+
+        const taskText = document.createElement('span');
+        taskText.textContent = task.task;
+
+        const removeButton = document.createElement('button');
+        removeButton.textContent = 'Remove';
+        removeButton.onclick = () => removeTask(task.id);
+
+        const completeButton = document.createElement('button');
+        completeButton.textContent = 'Complete';
+        completeButton.onclick = () => completeTask(task.id);
+
+        taskItem.appendChild(taskText);
+        taskItem.appendChild(removeButton);
+        taskItem.appendChild(completeButton);
+
+        return taskItem;
+    }
+
+    async function sendRequest(action, data = {}) {
+        try {
+            const response = await axios.post(`http://localhost:3000/${action}`, data, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            alert(response.data);
+
+            loadUserStatus();
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+    // Load initial data on page load
+    loadUserStatus();
+    loadTasks();
+</script>
+
+</body>
+</html>

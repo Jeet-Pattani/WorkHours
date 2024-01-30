@@ -1,6 +1,20 @@
-## WorkHours Tracker
+## WorkHours
 
 WorkHours is a simple time and task tracking application built using Node.js and Express. It allows users to record clock-in/out times, breaks, and manage their tasks throughout the day.
+
+### Features
+
+Directly run the app using the batch script.
+
+1. No Database
+2. Runs Locally
+3. Simple Click and Run
+4. Detailed Summary of time logs
+5. CRUD operations for tasks
+6. Change Mode with RCtrl
+7. Change Clock Time format by Clicking
+8. Sort Tasks by Dragging
+9. Update Tasks by clicking and hitting enter
 
 ### Table of Contents
 
@@ -9,6 +23,7 @@ WorkHours is a simple time and task tracking application built using Node.js and
 - [Endpoints](#endpoints)
 - [Folder Structure](#folder-structure)
 - [Dependencies](#dependencies)
+
 
 ### Installation
 

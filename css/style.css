@@ -21,11 +21,16 @@ body {
     /* --main-text: #333; Dark text color */
     --main-text:#fefefe;
     --button-bg: #4caf50; /* Green button background color */
-    --button-bg: #369739; /* Green button background color */
+    --button-bg: #369639; /* Green button background color */
+    --button-bg: #0f9696; /* Green button background color */
+    --button-bg: #01acac; /* Green button background color */
+    --button-bg: #2255A4; /* Green button background color */
+    --button-bg-hover: #027878;
+    --button-bg-hover: #063985;
     --button-text: #fff; /* White text inside buttons */
     --task-bg: #cfd8dc; /* Light bluish color for tasks */
     --task-border: #90a4ae; /* Task border color */
-    --input-bg: #ffffff; /* White background for input field */
+    --input-bg: #e2e2e25e; /* White background for input field */
     --input-border: #90a4ae; /* Border color for input field */
     --input-text: #333; /* Text color for input field */
     --dark-bg: #121212; /* Dark background color */
@@ -45,8 +50,12 @@ body {
     transition: background-color 0.5s, color 0.5s;
     font-family: 'Source Code Pro', monospace;
     /* background-image: linear-gradient(to right, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.pexels.com/photos/950210/pexels-photo-950210.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'); */
-    background-image: linear-gradient(to right, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('../images/light.jpg');
+    /* background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.5)), url('https://images.pexels.com/photos/869258/pexels-photo-869258.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2');
+    /* background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.5)), url('https://images.pexels.com/photos/416779/pexels-photo-416779.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'); */
+    /* background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.2)), url('https://cdn.pixabay.com/photo/2017/03/15/13/27/rough-horn-2146181_1280.jpg'); */
+    background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.2)), url('../images/light.jpg');
     background-repeat: no-repeat;
+    /* background-position: 0 32%; */
     background-size: cover;
     background-attachment: fixed;
 }
@@ -66,6 +75,7 @@ button {
 
 button:hover {
     background-color: #1b611e; /* Darker green on hover */
+    background-color: var(--button-bg-hover); /* Darker green on hover */
 }
 
 #statusIndicator{
@@ -76,6 +86,19 @@ button:hover {
     font-size: 2.5em;
     margin: 20px auto;
     color: #57d25b;
+    color: #22c6c6;
+    color: #0da6f3;
+    color: #ffffff;
+    cursor: pointer;
+    display: inline-block;
+    transition: 0.3s ease-in-out;
+}
+
+#clockDisplay:hover {
+    color: #059a9a;
+    color: #008acf;
+    color: #bcbcbc;
+    cursor: pointer;
 }
 
 #dateDisplay {
@@ -88,7 +111,7 @@ button:hover {
 #taskList {
     margin-top: 20px;
     background-color: var(--main-bg);
-    color: white;
+    color: black;
     background-color: #e5eff940;
     backdrop-filter: blur(5px);
     padding: 10px;
@@ -116,6 +139,8 @@ button:hover {
 .taskItem span{
     padding: 5px 8px;
     color: #fff;
+    color: #00162F;
+    font-size: 1.1rem;
 }
 
 .taskActions button {
@@ -128,7 +153,8 @@ button:hover {
 
 .taskActions button:hover {
     background-color: #256f29; /* Darker green on hover */
-    border: 1px solid #256f29;
+    background-color: var(--button-bg-hover);
+    border: 1px solid var(--button-bg-hover);
 }
 
 /* Task form */
@@ -141,6 +167,7 @@ label {
     font-size: 1.1rem;
     margin-bottom: 5px;
     color: #f2fbff; /* Label text color */
+    color: #00162F;
 }
 
 #taskInput {
@@ -150,9 +177,15 @@ label {
     border: 1px solid var(--input-border);
     border-radius: 5px;
     background-color: var(--input-bg);
+    backdrop-filter: blur(2px);
     color: var(--input-text);
     font-family: "Source Code Pro", monospace;
 }
+
+::placeholder {
+    color: #00162fa7;
+    opacity: 1; /* Firefox */
+  }
 
 button[type="button"] {
     font-size: 1.1rem;
@@ -168,6 +201,8 @@ button[type="button"] {
 button[type="button"]:hover {
     background-color: #256f29; /* Darker green on hover */
     border: 1px solid #256f29;
+    background-color: var(--button-bg-hover);
+    border: 1px solid var(--button-bg-hover);
 }
 
 button[type="button"] img{
@@ -188,6 +223,16 @@ body.dark-mode {
     background-image: linear-gradient(to right, rgba(0, 0, 0, 0.507), rgba(0, 0, 0, 0.5)), url('../images/dark.jpg');
 }
 
+body.dark-mode #clockDisplay {
+    color: #f74c25;
+    cursor: pointer;
+}
+
+body.dark-mode #clockDisplay:hover {
+    color: #a42508;
+    cursor: pointer;
+}
+
 /* Additional styles for tasks in dark mode */
 body.dark-mode #taskList {
     background-color: var(--dark-bg);
@@ -199,6 +244,11 @@ body.dark-mode .taskItem {
     background-color: var(--dark-task-bg);
     border: 1px solid var(--dark-task-border);
     background-color: transparent;
+}
+
+body.dark-mode .taskItem span{
+        color: #00162F;
+        color: #fff;
 }
 
 body.dark-mode .taskItem:hover {
@@ -222,10 +272,6 @@ body.dark-mode button[type=button]:hover, body.dark-mode .taskActions button:hov
     background-color: #a22307; /* Darker reddish-orange on hover */
     color: #fff;
     border: 1px solid #a22307;
-}
-
-body.dark-mode p#clockDisplay{
-    color: var(--dark-btn-bg);
 }
 
 body.dark-mode p#dateDisplay{
@@ -276,6 +322,7 @@ button#modeToggle .toggleCover {
     transform: translateX(0%);
     box-shadow: 2px 2px 19px 2px #000000a8;
     background-color: #c2c2c2;
+    background-color: #ebebeb;
     /* border-radius: 50%; */
 }
 
@@ -291,52 +338,42 @@ body.dark-mode button#modeToggle .toggleCover {
     transform: translateX(100%);
 } */
 
-@media (max-width:426px){
-    #taskInput{
-        width: 65%;
-    }
-    #taskForm{
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-direction: column;
-        gap: 1rem;
-    }
-    .inputGroup{
-        margin-top: 0.7rem;
-    }
-}
-
 /* Modal styles */
 .modal {
     display: none;
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgb(0, 0, 0);
+    background-color: rgb(0, 0, 0, 0.4);
+    backdrop-filter: blur(15px);
     z-index: 1;
 }
 
 .modal-content {
-    background-color: #000000;
+    background-color: rgb(0, 0, 0, 0.7);
     margin: 10% auto;
-    padding: 20px;
-    border: 1px solid #888;
+    padding: 20px 30px;
+    /* border: 1px solid #888; */
     width: 60%;
+    box-shadow: 0 0 150px 4px #00000078;
+}
+
+.modal-content h3{
+    margin: 1rem auto -0.5rem;
 }
 
 .close {
     color: #aaa;
     float: right;
-    font-size: 28px;
-    font-weight: bold;
+    font-size: 32px;
+    /* font-weight: bold; */
 }
 
 .close:hover,
 .close:focus {
-    color: black;
+    color: #808080;
     text-decoration: none;
     cursor: pointer;
 }
@@ -359,3 +396,27 @@ body.dark-mode button#modeToggle .toggleCover {
     background-color: #4CAF50;
     color: white;
 }
+
+
+@media (max-width:426px){
+    #taskInput{
+        width: 65%;
+    }
+    #taskForm{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 1rem;
+    }
+    .inputGroup{
+        margin-top: 0.7rem;
+    }
+    .modal-content{
+        width: 90%;
+    }
+    #breakDetailsTable{
+        overflow-x: scroll;
+    }
+}
+

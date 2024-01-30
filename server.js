@@ -7,6 +7,7 @@ const port = 3000; // Replace with your desired port
 app.use(bodyParser.json());
 const fs = require('fs');
 const path = require('path');
+const { log } = require('console');
 
 app.use(express.static(__dirname));
 const dataFilePath = path.join(__dirname, 'data.json');
@@ -26,13 +27,16 @@ function saveData(data) {
 }
 
 
+// Function to get the current date and time
 function getCurrentDateTime() {
     const now = new Date();
 
+    // Extracting date components
     const day = now.getDate();
     const month = now.getMonth() + 1; // Months are zero-based
     const year = now.getFullYear();
 
+    // Extracting time components
     const hours = now.getHours();
     const minutes = now.getMinutes();
     const seconds = now.getSeconds();
@@ -44,6 +48,7 @@ function getCurrentDateTime() {
     return formattedDate + ' ' + formattedTime;
 }
 
+// Function to pad single-digit values with leading zeros
 function padZero(value) {
     return value < 10 ? '0' + value : value;
 }
@@ -148,14 +153,27 @@ function clockOut(req, res) {
     const currentDateTime = getCurrentDateTime();
     const data = loadData();
     const today = new Date().toLocaleDateString();
-    const timeData = data[today] ? data[today].time : null;
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yesterdayFormatted = yesterday.toLocaleDateString();
+    
+    const timeDataToday = data[today] ? data[today].time : null;
+    const timeDataYesterday = data[yesterdayFormatted] ? data[yesterdayFormatted].time : null;
 
-    if (timeData && timeData.clockInTime) {
-        // Use calculateTotalBreakDuration instead of calculateTotalBreakDurationWithDate
-        const totalBreakDuration = calculateTotalBreakDuration(timeData.breaks);
-        const workDuration = calculateTimeDifferenceWithDate(timeData.clockInTime, currentDateTime);
-        timeData.clockOutTime = currentDateTime;
+    if (timeDataToday && timeDataToday.clockInTime) {
+        const totalBreakDuration = calculateTotalBreakDuration(timeDataToday.breaks);
+        const workDuration = calculateTimeDifferenceWithDate(timeDataToday.clockInTime, currentDateTime);
+        timeDataToday.clockOutTime = currentDateTime;
         data[today].userStatus = 'clocked-out';
+        saveData(data);
+        console.log(`Clock Out recorded. Work duration: ${workDuration}, Total Break duration: ${totalBreakDuration}`);
+        res.send(`Clock Out recorded. Work duration: ${workDuration}, Total Break duration: ${totalBreakDuration}`);
+    } else if (timeDataYesterday && timeDataYesterday.clockInTime && timeDataYesterday.clockOutTime === null) {
+        // Allow clock-out for users who clocked in on the previous day
+        const totalBreakDuration = calculateTotalBreakDuration(timeDataYesterday.breaks);
+        const workDuration = calculateTimeDifferenceWithDate(timeDataYesterday.clockInTime, currentDateTime);
+        timeDataYesterday.clockOutTime = currentDateTime;
+        data[yesterdayFormatted].userStatus = 'clocked-out';
         saveData(data);
         console.log(`Clock Out recorded. Work duration: ${workDuration}, Total Break duration: ${totalBreakDuration}`);
         res.send(`Clock Out recorded. Work duration: ${workDuration}, Total Break duration: ${totalBreakDuration}`);
@@ -164,6 +182,8 @@ function clockOut(req, res) {
         res.send('Error: Clock In not recorded.');
     }
 }
+
+
 
 function getSummary(req, res) {
     const data = loadData();
@@ -188,7 +208,7 @@ function getSummary(req, res) {
             numberOfBreaks,
             breakDetails,
         });
-        res.json({ TotalWorkDuration: totalWorkDuration,TotalBreakDuration: totalBreakDuration,NumberOfBreaks:numberOfBreaks,BreakDetails: breakDetails });
+        res.send({ TotalWorkDuration: totalWorkDuration,TotalBreakDuration: totalBreakDuration,NumberOfBreaks:numberOfBreaks,BreakDetails: breakDetails });
     } else {
         console.log('Error: No data available for today.');
         res.send('Error: No data available for today.');
@@ -218,9 +238,25 @@ function calculateTotalBreakDuration(breaks) {
 }
 
 function getServerDateTime(req, res) {
-    const currentDateTime = new Date().toLocaleString();
+    // Check if the frontend specified the time format
+    const is24HourFormat = req.query.format === '24hr';
+
+    const options = {
+        year: 'numeric',
+        month: 'numeric',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: !is24HourFormat,
+    };
+
+    const currentDateTime = new Date().toLocaleString(undefined, options);//In the toLocaleString method, the first argument is a locale string, which is typically used to specify the language and region for formatting purposes. However, in your code, the undefined is passed as the first argument. When undefined is used, the method uses the default locale of the JavaScript runtime environment.
+    
+    
     res.json({ serverDateTime: currentDateTime });
 }
+
 
 
 function addTask(req, res){
@@ -340,14 +376,22 @@ async function removeTask(req, res) {
 function getUserStatus(req, res){
     const data = loadData();
     const today = new Date().toLocaleDateString();
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yesterdayFormatted = yesterday.toLocaleDateString();
 
     if (data[today] && data[today].userStatus) {
         const userStatus = data[today].userStatus;
         res.json({ userStatus });
+    } else if (data[yesterdayFormatted] && data[yesterdayFormatted].userStatus) {
+        // Check yesterday's status if today's status is not found
+        const userStatus = data[yesterdayFormatted].userStatus;
+        res.json({ userStatus });
     } else {
-        res.json({ userStatus: 'Not on Work' }); // Default status if not found
+        res.json({ userStatus: 'Not at Work' }); // Default status if not found
     }
 }
+
 
 
 function getTasks(req, res){

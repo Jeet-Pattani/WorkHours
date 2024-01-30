@@ -24,22 +24,22 @@
             <div class="modal-content">
                 <span class="close" onclick="closeModal()">&times;</span>
                 <h2>Summary</h2>
-                <p id="totalWorkDuration"></p>
-                <p id="totalBreakDuration"></p>
-                <p id="numberOfBreaks"></p>
+                <p id="TotalWorkDuration"></p>
+                <p id="TotalBreakDuration"></p>
+                <p id="NumberOfBreaks"></p>
                 <h3>Break Details</h3>
                 <div id="breakDetailsTable">
                     <table id="breakDetails"></table>
                 </div>
             </div>
         </div>
-        <button type="button" id="modeToggle" onclick="toggleMode()">
+        <button type="button" id="modeToggle">
             <span class="toggleCover"></span>
             <img src="/images/moon.png" alt="">
             <img src="/images/sun.png" alt="">
         </button>
         <div id="statusIndicator">Status: Not at Work</div>
-        <p id="clockDisplay"></p>
+        <span id="clockDisplay"></span>
         <p id="dateDisplay"></p>
         <div class="actionButtons">
             <button type="button" id="clockInButton" onclick="sendRequest('clock-in');">
@@ -66,12 +66,18 @@
                 </div>
                 
             </button>
+            <button type="button" id="getSummary">
+                <div class="btnInWrapper">
+                    <img src="images/summary.png" alt=""> <span class="btnText">Get Summary</span>
+                </div>
+                
+            </button>
         </div>
 
         <!-- Task form -->
         <form id="taskForm">
             <span class="inputGroup">
-                <label for="taskInput">Task:</label>
+                <label for="taskInput">Task :</label>
                 <input type="text" id="taskInput" name="taskInput" placeholder="Enter Your Task" required>
             </span>
             <button type="button" onclick="addTask()"> Add Task</button>

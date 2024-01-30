@@ -84,7 +84,7 @@ async function loadTasks() {
     try {
         const response = await axios.get('http://localhost:3000/get-tasks');
         const tasks = response.data.tasks;
-      
+
         const taskList = document.getElementById('taskList');
         taskList.innerHTML = ''; // Clear existing content
 
@@ -92,7 +92,7 @@ async function loadTasks() {
             taskIdCounter = tasks.length + 1;
             tasks.forEach(task => {
                 const taskItem = createTaskItem(task);
-                
+
                 // Check if the task is completed
                 if (task.completed) {
                     // Apply style with strike-through
@@ -130,9 +130,9 @@ async function completeTask() {
     // alert('Task completed successfully!');
 }
 
-async function getServerTime() {
+async function getServerTime(timeFormat) {
     try {
-        const response = await axios.get('http://localhost:3000/get-server-date-time');
+        const response = await axios.get(`http://localhost:3000/get-server-date-time?format=${timeFormat}`);
         return response.data.serverDateTime;
     } catch (error) {
         console.error('Error:', error);
@@ -140,8 +140,21 @@ async function getServerTime() {
     }
 }
 
+
+let is24HourFormat = true; // Flag to track the current time format
+
+// Function to toggle between 12-hour and 24-hour formats
+function toggleTimeFormat() {
+    is24HourFormat = !is24HourFormat;
+    updateClockDisplay(); // Update the clock display immediately
+}
+
+// Add a click event listener to the clockDisplay div
+document.getElementById('clockDisplay').addEventListener('click', toggleTimeFormat);
+
 async function updateClockDisplay() {
-    const serverDateTime = await getServerTime();
+    const timeFormat = is24HourFormat ? '24hr' : '12hr';
+    const serverDateTime = await getServerTime(timeFormat);
 
     // Parse the serverDateTime string
     const [date, time] = serverDateTime.split(', ');
@@ -152,6 +165,7 @@ async function updateClockDisplay() {
     // Update time display
     document.getElementById('clockDisplay').innerText = time;
 }
+
 
 
 async function sendRequest(action, data = {}) {
@@ -177,7 +191,7 @@ async function sendRequest(action, data = {}) {
 async function updateTask(taskId, updatedTask) {
     try {
         await sendRequest('update-task', { taskId, updatedTask });
-        
+
         // Find the task item in the DOM and update its text content
         const taskItem = document.querySelector(`.taskItem[data-task-id="${taskId}"] > span`);
         if (taskItem) {
@@ -189,72 +203,79 @@ async function updateTask(taskId, updatedTask) {
 }
 
 
-// function updateTaskDescription() {
-//     const updatedTaskInput = document.getElementById('updatedTaskInput');
-//     const updatedTask = updatedTaskInput.value.trim();
-
-//     if (updatedTask !== '') {
-//         // Assuming you have a variable taskId that represents the ID of the task you want to update
-//         const taskId = 'your-task-id-here';
-
-//         // Call the updateTask function
-//         updateTask(taskId, updatedTask);
-
-//         // Clear the input field
-//         updatedTaskInput.value = '';
-//     }
-// }
-
 // Function to open the modal and update its content
 function openModal(summary) {
     const modal = document.getElementById('summaryModal');
     modal.style.display = 'block';
 
     // Update modal content
-    document.getElementById('totalWorkDuration').textContent = `Total Work Duration: ${summary.totalWorkDuration}`;
-    document.getElementById('totalBreakDuration').textContent = `Total Break Duration: ${summary.totalBreakDuration}`;
-    document.getElementById('numberOfBreaks').textContent = `Number of Breaks: ${summary.numberOfBreaks}`;
+    document.getElementById('TotalWorkDuration').textContent = `Total Work Duration: ${summary.TotalWorkDuration || 'N/A'}`;
+    document.getElementById('TotalBreakDuration').textContent = `Total Break Duration: ${summary.TotalBreakDuration || 'N/A'}`;
+    document.getElementById('NumberOfBreaks').textContent = `Number of Breaks: ${summary.NumberOfBreaks || 'N/A'}`;
 
     const breakDetailsTable = document.getElementById('breakDetails');
     breakDetailsTable.innerHTML = ''; // Clear existing content
 
-    // Create table header
-    const tableHeader = breakDetailsTable.createTHead();
-    const headerRow = tableHeader.insertRow();
-    const headerSrNo = headerRow.insertCell(0);
-    const headerStartBreak = headerRow.insertCell(1);
-    const headerEndBreak = headerRow.insertCell(2);
-    const headerDuration = headerRow.insertCell(3);
+    if (summary.BreakDetails && Array.isArray(summary.BreakDetails) && summary.BreakDetails.length > 0) {
+        // Create table header
+        const tableHeader = breakDetailsTable.createTHead();
+        const headerRow = tableHeader.insertRow();
+        const headerSrNo = headerRow.insertCell(0);
+        const headerStartBreak = headerRow.insertCell(1);
+        const headerEndBreak = headerRow.insertCell(2);
+        const headerDuration = headerRow.insertCell(3);
 
-    headerSrNo.textContent = 'Sr. No';
-    headerStartBreak.textContent = 'Start Break';
-    headerEndBreak.textContent = 'End Break';
-    headerDuration.textContent = 'Duration';
+        headerSrNo.textContent = 'Sr. No';
+        headerStartBreak.textContent = 'Start Break';
+        headerEndBreak.textContent = 'End Break';
+        headerDuration.textContent = 'Duration';
 
-    // Create table body
-    const tableBody = breakDetailsTable.createTBody();
+        // Create table body
+        const tableBody = breakDetailsTable.createTBody();
 
-    let currentRow = null;
+ // Add break details to the table
+// Initialize variables to store the current Start Break and End Break details
+let currentStartBreak = null;
+let currentEndBreak = null;
+let serialNumber = 1;
 
-    // Add break details to the table
-    summary.breakDetails.forEach((breakDetail, index) => {
-        if (breakDetail.type === 'Start Break') {
-            currentRow = tableBody.insertRow();
-            currentRow.insertCell(0).textContent = index + 1;
-            currentRow.insertCell(1).textContent = breakDetail.time;
-        } else if (breakDetail.type === 'End Break') {
-            currentRow.insertCell(2).textContent = breakDetail.time;
-            currentRow.insertCell(3).textContent = breakDetail.duration || '';
-            currentRow = null; // Reset current row
-        }
-    });
+summary.BreakDetails.forEach((breakDetail, index) => {
+    if (breakDetail.type === 'Start Break') {
+        // If it's 'Start Break', store the details in currentStartBreak
+        currentStartBreak = breakDetail;
+    } else if (breakDetail.type === 'End Break') {
+        // If it's 'End Break', store the details in currentEndBreak
+        currentEndBreak = breakDetail;
 
-    // Handle the case where "End Break" is missing for the last "Start Break"
-    if (currentRow) {
-        currentRow.insertCell(2).textContent = '';
-        currentRow.insertCell(3).textContent = '';
+        // Create a row with the details of Start Break and End Break
+        const currentRow = tableBody.insertRow();
+        currentRow.insertCell(0).textContent = serialNumber;
+        currentRow.insertCell(1).textContent = currentStartBreak.time;
+        currentRow.insertCell(2).textContent = currentEndBreak.time;
+        currentRow.insertCell(3).textContent = currentEndBreak.duration || '';
+
+        // Increment the serial number for the next pair
+        serialNumber++;
+
+        // Reset the variables for the next pair
+        currentStartBreak = null;
+        currentEndBreak = null;
+    }
+});
+
+
+        
+
+    } else {
+        // Handle the case where breakDetails is missing or not an array
+        const noBreaksMessage = document.createElement('p');
+        noBreaksMessage.textContent = 'No break details available.';
+        breakDetailsTable.appendChild(noBreaksMessage);
     }
 }
+
+
+
 
 // Function to close the modal
 function closeModal() {
@@ -262,10 +283,11 @@ function closeModal() {
     modal.style.display = 'none';
 }
 
-document.getElementById('clockOutButton').addEventListener('click', async () => {
+document.getElementById('getSummary').addEventListener('click', async () => {
     try {
         const response = await axios.get('http://localhost:3000/get-summary');
         openModal(response.data);
+        console.log(response)
     } catch (error) {
         console.error('Error getting summary:', error);
     }
