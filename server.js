@@ -237,24 +237,42 @@ function calculateTotalBreakDuration(breaks) {
     return `${formatTime(totalHours)}:${formatTime(totalMinutes)}:${formatTime(totalSeconds)}`;
 }
 
-function getServerDateTime(req, res) {
+function getServerTime(req, res) {
     // Check if the frontend specified the time format
     const is24HourFormat = req.query.format === '24hr';
 
     const options = {
-        year: 'numeric',
-        month: 'numeric',
-        day: 'numeric',
+       // year: 'numeric',
+       // month: 'short', // You can change this to 'short', 'long', etc.
+       // day: '2-digit', // You can change this to 'numeric', 'short', 'long', etc.
         hour: '2-digit',
         minute: '2-digit',
         second: '2-digit',
         hour12: !is24HourFormat,
     };
 
-    const currentDateTime = new Date().toLocaleString(undefined, options);//In the toLocaleString method, the first argument is a locale string, which is typically used to specify the language and region for formatting purposes. However, in your code, the undefined is passed as the first argument. When undefined is used, the method uses the default locale of the JavaScript runtime environment.
+    const currentTime = new Date().toLocaleString(undefined, options);//In the toLocaleString method, the first argument is a locale string, which is typically used to specify the language and region for formatting purposes. However, in your code, the undefined is passed as the first argument. When undefined is used, the method uses the default locale of the JavaScript runtime environment.
+    console.log("Current Server Time,",currentTime)
     
-    
-    res.json({ serverDateTime: currentDateTime });
+    res.json({ serverTime: currentTime });
+}
+
+function getServerDate(req,res){
+    const isLongFormat = req.query.format === 'long';
+    const option1 = {
+        weekday:"short",
+        year: "numeric",
+        month: "short",
+        day: "numeric"
+     }
+     const option2 = {
+         dateStyle: "short",//gives 31/01/24
+     }
+     let options =  isLongFormat ? option1 : option2;
+     const currentDate = new Date().toLocaleString(undefined, options);
+     console.log("Current Server Date,",currentDate)
+     
+     res.json({ serverDate: currentDate });
 }
 
 
@@ -406,7 +424,8 @@ function getTasks(req, res){
     }
 }
 
-app.get('/get-server-date-time', getServerDateTime);
+app.get('/get-server-time', getServerTime);
+app.get('/get-server-date', getServerDate);
 app.post('/clock-in', clockIn);
 app.post('/start-break', startBreak);
 app.post('/end-break', endBreak);

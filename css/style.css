@@ -82,6 +82,11 @@ button:hover {
     font-size: 1.1rem;
 }
 
+.dateTimeContainer{
+    display: grid;
+    place-items: center;
+}
+
 #clockDisplay {
     font-size: 2.5em;
     margin: 20px auto;
@@ -105,6 +110,15 @@ button:hover {
     font-size: 1.05em;
     margin: 10px auto;
     color: #fff; /* Dark text color */
+    cursor: pointer;
+    width: 50%;
+}
+
+#dateDisplay:hover {
+    color: #059a9a;
+    color: #008acf;
+    color: #bcbcbc;
+    cursor: pointer;
 }
 
 /* Additional styles for tasks */
@@ -240,6 +254,10 @@ body.dark-mode #taskList {
     backdrop-filter: blur(5px);
 }
 
+body.dark-mode #taskList p{
+    color: white;
+}
+
 body.dark-mode .taskItem {
     background-color: var(--dark-task-bg);
     border: 1px solid var(--dark-task-border);
@@ -281,6 +299,23 @@ body.dark-mode p#dateDisplay{
 body.dark-mode label{
     color: var(--dark-text);
 }
+
+body.dark-mode #taskInput {
+    font-size: 1em;
+    padding: 10px;
+    width: 18%;
+    border: 1px solid var(--input-border);
+    border-radius: 5px;
+    background-color: #090c0f96;
+    backdrop-filter: blur(2px);
+    color: white;
+    font-family: "Source Code Pro", monospace;
+}
+
+body.dark-mode ::placeholder {
+    color: #c6e0ffa7;
+    opacity: 1; /* Firefox */
+  }
 
 button#modeToggle {
     position: relative;

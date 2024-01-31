@@ -132,14 +132,23 @@ async function completeTask() {
 
 async function getServerTime(timeFormat) {
     try {
-        const response = await axios.get(`http://localhost:3000/get-server-date-time?format=${timeFormat}`);
-        return response.data.serverDateTime;
+        const response = await axios.get(`http://localhost:3000/get-server-time?format=${timeFormat}`);
+        return response.data.serverTime;
     } catch (error) {
         console.error('Error:', error);
         return 'Error getting server time';
     }
 }
 
+async function getServerDate(dateFormat){
+    try{
+        const response = await axios.get(`http://localhost:3000/get-server-date?format=${dateFormat}`);
+        return response.data.serverDate
+    } catch(error){
+        console.error('Error:',error);
+        return 'Error getting server date'
+    }
+}
 
 let is24HourFormat = true; // Flag to track the current time format
 
@@ -149,22 +158,38 @@ function toggleTimeFormat() {
     updateClockDisplay(); // Update the clock display immediately
 }
 
+let isLongFormat = true;
+
+function toggleDateFormat(){
+    isLongFormat = !isLongFormat;
+    updateDateDisplay(); //Update the date display immediately
+}
+
 // Add a click event listener to the clockDisplay div
 document.getElementById('clockDisplay').addEventListener('click', toggleTimeFormat);
+document.getElementById('dateDisplay').addEventListener('click', toggleDateFormat);
 
 async function updateClockDisplay() {
     const timeFormat = is24HourFormat ? '24hr' : '12hr';
-    const serverDateTime = await getServerTime(timeFormat);
-
-    // Parse the serverDateTime string
-    const [date, time] = serverDateTime.split(', ');
-
-    // Update date display
-    document.getElementById('dateDisplay').innerText = date;
-
-    // Update time display
-    document.getElementById('clockDisplay').innerText = time;
+    const serverTime = await getServerTime(timeFormat);
+    document.getElementById('clockDisplay').innerText = serverTime;
 }
+
+async function updateDateDisplay(){
+    const dateFormat = isLongFormat ? 'long' : 'short';
+    const serverDate = await getServerDate(dateFormat);
+    if(dateFormat === 'long'){
+        // Regular expression to match the comma after two spaces
+        var regex = /(\w{3}, \d{1,2} \w{3}), (\d{4})/;
+
+        // Replace the matched pattern with the desired format
+        var outputString = serverDate.replace(regex, "$1 $2");
+        document.getElementById('dateDisplay').innerText = outputString;
+    } else{
+        document.getElementById('dateDisplay').innerText = serverDate;
+    }
+}
+
 
 
 
@@ -297,3 +322,4 @@ document.getElementById('getSummary').addEventListener('click', async () => {
 
 window.onload = loadTasks;
 setInterval(updateClockDisplay, 500);
+setInterval(updateDateDisplay,500);

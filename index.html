@@ -39,8 +39,10 @@
             <img src="/images/sun.png" alt="">
         </button>
         <div id="statusIndicator">Status: Not at Work</div>
-        <span id="clockDisplay"></span>
-        <p id="dateDisplay"></p>
+        <div class="dateTimeContainer">
+            <div id="clockDisplay"></div>
+            <div id="dateDisplay"></div>
+        </div>
         <div class="actionButtons">
             <button type="button" id="clockInButton" onclick="sendRequest('clock-in');">
                 <div class="btnInWrapper">
