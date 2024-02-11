@@ -4,3 +4,10 @@ document.addEventListener('DOMContentLoaded', function () {
         animation: 150,
     });
 });
+
+document.addEventListener('DOMContentLoaded', function () {
+    // Initialize sortable library
+    new Sortable(document.getElementById('additionalTaskList'), {
+        animation: 150,
+    });
+});

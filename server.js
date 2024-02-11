@@ -10,11 +10,14 @@ const path = require('path');
 const { log } = require('console');
 
 app.use(express.static(__dirname));
+//data.json saves the timelogs(timestamps) as well as the daily tasks
 const dataFilePath = path.join(__dirname, 'data.json');
+//task.json saves the long-term tasks separately without any timestamps
+const taskFilePath = path.join(__dirname, 'data1.json');
 
-function loadData() {
+function loadData(filePath) {
     try {
-        const data = fs.readFileSync(dataFilePath, 'utf8');
+        const data = fs.readFileSync(filePath, 'utf8');
         return JSON.parse(data);
     } catch (err) {
         return {};
@@ -22,12 +25,10 @@ function loadData() {
 }
 
 
-function saveData(data) {
-    fs.writeFileSync(dataFilePath, JSON.stringify(data, null, 2), 'utf8');
+function saveData(data, filePath) {
+    fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf8');
 }
 
-
-// Function to get the current date and time
 function getCurrentDateTime() {
     const now = new Date();
 
@@ -87,7 +88,7 @@ function formatTime(time) {
 
 function clockIn(req, res) {
     const currentDateTime = getCurrentDateTime();
-    const data = loadData();
+    const data = loadData(dataFilePath);
     const today = new Date().toLocaleDateString();
 
     if (!data[today]) {
@@ -97,14 +98,14 @@ function clockIn(req, res) {
         data[today].userStatus = 'clocked-in';
     }
 
-    saveData(data);
+    saveData(data,dataFilePath);
     console.log('Clock In recorded.');
     res.send('Clock In recorded.');
 }
 
 function startBreak(req, res) {
     const currentDateTime = getCurrentDateTime();
-    const data = loadData();
+    const data = loadData(dataFilePath);
     const today = new Date().toLocaleDateString();
 
     if (!data[today]) {
@@ -121,7 +122,7 @@ function startBreak(req, res) {
         // Start a new break
         data[today].time.breaks.push({ type: 'Start Break', time: currentDateTime });
         data[today].userStatus = 'on-break';
-        saveData(data);
+        saveData(data,dataFilePath);
         console.log('Break started.');
         res.send('Break started.');
     }
@@ -130,7 +131,7 @@ function startBreak(req, res) {
 
 function endBreak(req, res) {
     const currentDateTime = getCurrentDateTime();
-    const data = loadData();
+    const data = loadData(dataFilePath);
     const today = new Date().toLocaleDateString();
     const timeData = data[today] ? data[today].time : null;
 
@@ -140,7 +141,7 @@ function endBreak(req, res) {
 
         timeData.breaks.push({ type: 'End Break', time: currentDateTime, duration: breakDuration });
         data[today].userStatus = 'back-to-work';
-        saveData(data);
+        saveData(data,dataFilePath);
         console.log(`Break ended. Break duration: ${breakDuration}`);
         res.send(`Break ended. Break duration: ${breakDuration}`);
     } else {
@@ -151,12 +152,12 @@ function endBreak(req, res) {
 
 function clockOut(req, res) {
     const currentDateTime = getCurrentDateTime();
-    const data = loadData();
+    const data = loadData(dataFilePath);
     const today = new Date().toLocaleDateString();
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
     const yesterdayFormatted = yesterday.toLocaleDateString();
-    
+
     const timeDataToday = data[today] ? data[today].time : null;
     const timeDataYesterday = data[yesterdayFormatted] ? data[yesterdayFormatted].time : null;
 
@@ -165,7 +166,7 @@ function clockOut(req, res) {
         const workDuration = calculateTimeDifferenceWithDate(timeDataToday.clockInTime, currentDateTime);
         timeDataToday.clockOutTime = currentDateTime;
         data[today].userStatus = 'clocked-out';
-        saveData(data);
+        saveData(data,dataFilePath);
         console.log(`Clock Out recorded. Work duration: ${workDuration}, Total Break duration: ${totalBreakDuration}`);
         res.send(`Clock Out recorded. Work duration: ${workDuration}, Total Break duration: ${totalBreakDuration}`);
     } else if (timeDataYesterday && timeDataYesterday.clockInTime && timeDataYesterday.clockOutTime === null) {
@@ -174,7 +175,7 @@ function clockOut(req, res) {
         const workDuration = calculateTimeDifferenceWithDate(timeDataYesterday.clockInTime, currentDateTime);
         timeDataYesterday.clockOutTime = currentDateTime;
         data[yesterdayFormatted].userStatus = 'clocked-out';
-        saveData(data);
+        saveData(data,dataFilePath);
         console.log(`Clock Out recorded. Work duration: ${workDuration}, Total Break duration: ${totalBreakDuration}`);
         res.send(`Clock Out recorded. Work duration: ${workDuration}, Total Break duration: ${totalBreakDuration}`);
     } else {
@@ -186,7 +187,7 @@ function clockOut(req, res) {
 
 
 function getSummary(req, res) {
-    const data = loadData();
+    const data = loadData(dataFilePath);
     const today = new Date().toLocaleDateString();
     const timeData = data[today] ? data[today].time : null;
 
@@ -208,7 +209,7 @@ function getSummary(req, res) {
             numberOfBreaks,
             breakDetails,
         });
-        res.send({ TotalWorkDuration: totalWorkDuration,TotalBreakDuration: totalBreakDuration,NumberOfBreaks:numberOfBreaks,BreakDetails: breakDetails });
+        res.send({ TotalWorkDuration: totalWorkDuration, TotalBreakDuration: totalBreakDuration, NumberOfBreaks: numberOfBreaks, BreakDetails: breakDetails });
     } else {
         console.log('Error: No data available for today.');
         res.send('Error: No data available for today.');
@@ -242,9 +243,9 @@ function getServerTime(req, res) {
     const is24HourFormat = req.query.format === '24hr';
 
     const options = {
-       // year: 'numeric',
-       // month: 'short', // You can change this to 'short', 'long', etc.
-       // day: '2-digit', // You can change this to 'numeric', 'short', 'long', etc.
+        // year: 'numeric',
+        // month: 'short', // You can change this to 'short', 'long', etc.
+        // day: '2-digit', // You can change this to 'numeric', 'short', 'long', etc.
         hour: '2-digit',
         minute: '2-digit',
         second: '2-digit',
@@ -252,34 +253,127 @@ function getServerTime(req, res) {
     };
 
     const currentTime = new Date().toLocaleString(undefined, options);//In the toLocaleString method, the first argument is a locale string, which is typically used to specify the language and region for formatting purposes. However, in your code, the undefined is passed as the first argument. When undefined is used, the method uses the default locale of the JavaScript runtime environment.
-    console.log("Current Server Time,",currentTime)
-    
+    // console.log("Current Server Time,",currentTime);
+
     res.json({ serverTime: currentTime });
 }
 
-function getServerDate(req,res){
+function getServerDate(req, res) {
     const isLongFormat = req.query.format === 'long';
     const option1 = {
-        weekday:"short",
+        weekday: "short",
         year: "numeric",
         month: "short",
         day: "numeric"
-     }
-     const option2 = {
-         dateStyle: "short",//gives 31/01/24
-     }
-     let options =  isLongFormat ? option1 : option2;
-     const currentDate = new Date().toLocaleString(undefined, options);
-     console.log("Current Server Date,",currentDate)
-     
-     res.json({ serverDate: currentDate });
+    }
+    const option2 = {
+        dateStyle: "short",//gives 31/01/24
+    }
+    let options = isLongFormat ? option1 : option2;
+    const currentDate = new Date().toLocaleString(undefined, options);
+    //  console.log("Current Server Date,",currentDate);
+
+    res.json({ serverDate: currentDate });
 }
 
-
-
-function addTask(req, res){
+//Function to add long term tasks
+function addLtTask(req, res){
     const currentTime = new Date().toLocaleTimeString();
-    const data = loadData();
+    const data = loadData(taskFilePath)
+    const taskInput = req.body.task;
+    
+        // Determine the taskIdCounter based on existing tasks
+        let lastTaskIdCounter = 0;
+        const lastTask = data[data.length - 1];
+    
+        if (lastTask) {
+            const lastTaskId = lastTask.id;
+            const lastTaskIdParts = lastTaskId.split('t');
+            lastTaskIdCounter = parseInt(lastTaskIdParts[1]) + 1;
+        } else {
+            // If tasks array is empty, set taskIdCounter to 1
+            lastTaskIdCounter = 1;
+        }
+    
+        // Set the taskIdCounter for generating the new taskId
+        taskIdCounter = lastTaskIdCounter;
+    
+        const today_ForTaskID = new Date();
+        const formattedDate = `${today_ForTaskID.getDate()}${today_ForTaskID.getMonth() + 1}${today_ForTaskID.getFullYear()}`;
+        const taskId = `${formattedDate}t${taskIdCounter}`;
+    
+        data.push({ id: taskId, description: taskInput, timeAdded: currentTime, timeCompleted: null, completed: false });
+        saveData(data,taskFilePath);
+
+        res.send("Long Term Notes/Tasks Added.")
+    
+}
+
+function removeLtTask(req, res) {
+    const taskId = req.body.taskId;
+    let data = loadData(taskFilePath);
+
+    // Check if the task with the specified ID exists
+    const taskIndex = data.findIndex(task => task.id === taskId);
+
+    if (taskIndex !== -1) {
+        // Remove the task with the specified ID
+        data.splice(taskIndex, 1);
+        console.log(`Task with ID ${taskId} removed successfully.`);
+        res.send("Task removed !")
+    } else {
+        console.log(`Task with ID ${taskId} not found.`);
+        res.send("Error: Task ID not found !")
+    }
+
+    // Save the updated data back to the file
+    saveData(data, taskFilePath);
+}
+
+function getLtTasks(req, res){
+    const data = loadData(taskFilePath);
+    res.json(data)
+}
+
+function completeLtTask(req, res) {
+    const taskId = req.body.taskId;
+    const data = loadData(taskFilePath);
+
+    // Find the task with the specified ID
+    const task = data.find(task => task.id === taskId);
+
+    if (task) {
+        task.completed = true;
+        saveData(data, taskFilePath);
+        res.send("Task completed Successfully.")
+    } else {
+        console.log('Task not found!');
+        res.send('Task not found!');
+    }
+}
+
+function updateLtTask(req, res) {
+    const taskId = req.body.taskId;
+    const data = loadData(taskFilePath);
+
+    // Find the task with the specified ID
+    const task = data.find(task => task.id === taskId);
+
+    if (task) {
+        console.log("Current Description is" + task.description);
+        task.description = req.body.updatedTask;
+        console.log("Task Description Updated.")
+        saveData(data, taskFilePath);
+        res.send("Long-Term Task Updated")
+    } else {
+        res.send("Task not found!")
+        console.log('Task not found!');
+    }
+}
+
+function addTask(req, res) {
+    const currentTime = new Date().toLocaleTimeString();
+    const data = loadData(dataFilePath);
     const today = new Date().toLocaleDateString();
 
     if (!data[today]) {
@@ -309,15 +403,15 @@ function addTask(req, res){
     const taskId = `${formattedDate}t${taskIdCounter}`;
 
     data[today].tasks.push({ id: taskId, timeAdded: currentTime, task, timeCompleted: null, completed: false });
-    saveData(data);
+    saveData(data,dataFilePath);
 
     res.send('Task added.');
 }
 
 
-function updateTask(req, res){
+function updateTask(req, res) {
     const { taskId, updatedTask } = req.body;
-    const data = loadData();
+    const data = loadData(dataFilePath);
     const today = new Date().toLocaleDateString();
 
     if (!data[today]) {
@@ -328,16 +422,16 @@ function updateTask(req, res){
 
     if (task) {
         task.task = updatedTask;
-        saveData(data);
+        saveData(data,dataFilePath);
         // res.send('Task updated.');
     } else {
         res.status(400).send('Error: Task not found.');
     }
 }
 
-function completeTask(req, res){
+function completeTask(req, res) {
     const currentTime = new Date().toLocaleTimeString();
-    const data = loadData();
+    const data = loadData(dataFilePath);
     const today = new Date().toLocaleDateString();
 
     if (!data[today]) {
@@ -350,7 +444,7 @@ function completeTask(req, res){
     if (task) {
         task.completed = true;
         task.timeCompleted = currentTime;
-        saveData(data);
+        saveData(data,dataFilePath);
         res.send('Task completed.');
     } else {
         res.status(400).send('Error: Task not found.');
@@ -362,7 +456,7 @@ async function removeTask(req, res) {
         const { taskId } = req.body;
 
         // Load tasks from data.json with utf8 encoding
-        const data = await loadData();
+        const data = await loadData(dataFilePath);
 
         // Find the task and remove it
         let taskFound = false;
@@ -381,7 +475,7 @@ async function removeTask(req, res) {
         }
 
         // Save the updated tasks to data.json
-        await saveData(data);
+        await saveData(data,dataFilePath);
 
         res.json('Task removed successfully');
     } catch (error) {
@@ -391,8 +485,8 @@ async function removeTask(req, res) {
 }
 
 
-function getUserStatus(req, res){
-    const data = loadData();
+function getUserStatus(req, res) {
+    const data = loadData(dataFilePath);
     const today = new Date().toLocaleDateString();
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
@@ -412,8 +506,8 @@ function getUserStatus(req, res){
 
 
 
-function getTasks(req, res){
-    const data = loadData();
+function getTasks(req, res) {
+    const data = loadData(dataFilePath);
     const today = new Date().toLocaleDateString();
 
     if (data[today] && data[today].tasks) {
@@ -437,6 +531,11 @@ app.post('/add-task', addTask);
 app.post('/remove-task', removeTask);
 app.post('/complete-task', completeTask);
 app.post('/update-task', updateTask);
+app.post('/add-lt-task',addLtTask);
+app.post('/update-lt-task',updateLtTask);
+app.post('/remove-lt-task',removeLtTask);
+app.post('/complete-lt-task',completeLtTask);
+app.get('/get-lt-tasks',getLtTasks);
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);

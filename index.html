@@ -48,31 +48,31 @@
                 <div class="btnInWrapper">
                     <img src="images/clock-in.png" alt=""> <span class="btnText">Clock In</span>
                 </div>
-                
+
             </button>
             <button type="button" id="startBreakButton" onclick="sendRequest('start-break');">
                 <div class="btnInWrapper">
                     <img src="images/start-break.png" alt=""> <span class="btnText">Start Break</span>
                 </div>
-                
+
             </button>
             <button type="button" id="endBreakButton" onclick="sendRequest('end-break');">
                 <div class="btnInWrapper">
                     <img src="images/end-break.png" alt=""> <span class="btnText">End Break</span>
                 </div>
-                
+
             </button>
             <button type="button" id="clockOutButton" onclick="sendRequest('clock-out');">
                 <div class="btnInWrapper">
                     <img src="images/clock-out.png" alt=""> <span class="btnText">Clock Out</span>
                 </div>
-                
+
             </button>
             <button type="button" id="getSummary">
                 <div class="btnInWrapper">
                     <img src="images/summary.png" alt=""> <span class="btnText">Get Summary</span>
                 </div>
-                
+
             </button>
         </div>
 
@@ -80,18 +80,33 @@
         <form id="taskForm">
             <span class="inputGroup">
                 <label for="taskInput">Task :</label>
-                <input type="text" id="taskInput" name="taskInput" placeholder="Enter Your Task" required>
+                <input type="text" id="taskInput" class="taskInput" name="taskInput" placeholder="Enter Your Task" required>
             </span>
             <button type="button" onclick="addTask()"> Add Task</button>
         </form>
-
         <!-- Task list -->
         <div id="taskList"></div>
+
+        <!-- Additional Task section -->
+        <div id="additionalTasks">
+            <h2>Additional Tasks</h2>
+            <form id="additionalTaskForm">
+                <span class="inputGroup">
+                    <label for="additionalTaskInput">Add Task :</label>
+                    <input type="text" id="additionalTaskInput" class="taskInput" name="additionalTaskInput"
+                        placeholder="Enter Additional Task" required>
+                </span>
+                <button type="button" onclick="addAdditionalTask()"> Add Additional Task</button>
+            </form>
+        </div>
+            <!-- Additional Task list -->
+            <div id="additionalTaskList"></div>
     </div>
     <script src="js/axios.min.js"></script>
     <script src="js/Sortable.min.js"></script>
     <script src="js/SortableConfig.js"></script>
     <script src="js/script.js"></script>
+    <!-- <script src="js/script1.js"></script> -->
     <script src="js/modeSwitch.js"></script>
     <script src="js/userStatus.js"></script>
 </body>

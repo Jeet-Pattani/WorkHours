@@ -46,6 +46,30 @@ function enableTaskEditing(taskId) {
     });
 }
 
+function enableLtTaskEditing(taskId) {
+    const taskText = document.querySelector(`.taskItem[data-task-id="${taskId}"] > span`);
+
+    // Set contenteditable to true
+    taskText.contentEditable = true;
+
+    // Focus on the task text
+    taskText.focus();
+
+    // Add a keydown event listener to detect Enter key
+    taskText.addEventListener('keydown', function (event) {
+        if (event.key === 'Enter') {
+            // Prevent the default Enter behavior (e.g., new line)
+            event.preventDefault();
+
+            // Disable contenteditable
+            taskText.contentEditable = false;
+
+            // Call the updateTask function with the new task description
+            updateLtTask(taskId, taskText.textContent.trim());
+        }
+    });
+}
+
 // Modify the createTaskItem function to include the onclick event for editing
 function createTaskItem(task) {
     const taskItem = document.createElement('div');
@@ -89,7 +113,7 @@ async function loadTasks() {
         taskList.innerHTML = ''; // Clear existing content
 
         if (tasks && tasks.length > 0) {
-            taskIdCounter = tasks.length + 1;
+            //taskIdCounter = tasks.length + 1;
             tasks.forEach(task => {
                 const taskItem = createTaskItem(task);
 
@@ -119,11 +143,28 @@ async function removeTask() {
     this.closest('.taskItem').remove();
 }
 
+async function removeLtTask() {
+    const taskId = this.getAttribute('data-task-id');
+    await sendRequest('remove-lt-task', { taskId });
+    this.closest('.taskItem').remove();
+}
+
 async function completeTask() {
     const taskId = this.getAttribute('data-task-id');
     const taskText = this.closest('.taskItem').querySelector('span');
 
     await sendRequest('complete-task', { taskId, timeCompleted: new Date().toLocaleTimeString(), completed: true });
+
+    taskText.style.textDecoration = 'line-through';
+    this.disabled = true;
+    // alert('Task completed successfully!');
+}
+
+async function completeLtTask() {
+    const taskId = this.getAttribute('data-task-id');
+    const taskText = this.closest('.taskItem').querySelector('span');
+
+    await sendRequest('complete-lt-task', { taskId, timeCompleted: new Date().toLocaleTimeString(), completed: true });
 
     taskText.style.textDecoration = 'line-through';
     this.disabled = true;
@@ -227,6 +268,20 @@ async function updateTask(taskId, updatedTask) {
     }
 }
 
+async function updateLtTask(taskId, updatedTask) {
+    try {
+        await sendRequest('update-lt-task', { taskId, updatedTask });
+
+        // Find the task item in the DOM and update its text content
+        const taskItem = document.querySelector(`.taskItem[data-task-id="${taskId}"] > span`);
+        if (taskItem) {
+            taskItem.textContent = updatedTask;
+        }
+    } catch (error) {
+        console.error('Error updating task:', error);
+    }
+}
+
 
 // Function to open the modal and update its content
 function openModal(summary) {
@@ -312,14 +367,98 @@ document.getElementById('getSummary').addEventListener('click', async () => {
     try {
         const response = await axios.get('http://localhost:3000/get-summary');
         openModal(response.data);
-        console.log(response)
+       // console.log(response)
     } catch (error) {
         console.error('Error getting summary:', error);
     }
 });
 
+async function loadLtTasks() {
+    try {
+         const response = await axios.get('http://localhost:3000/get-lt-tasks');
+         const tasks = response.data;
+ 
+         const taskList = document.getElementById('additionalTaskList');
+         taskList.innerHTML = ''; // Clear existing content
+         if (tasks && tasks.length > 0) {
+             //taskIdCounter = tasks.length + 1;
+             tasks.forEach((task,index) => {
+                 const taskItem = createLtTaskItem(task);
+                 // Check if the task is completed
+                 if (task.completed) {
+                     // Apply style with strike-through
+                     const taskDescription = taskItem.querySelector('.taskItem span');
+                     taskDescription.style.textDecoration = 'line-through';
+                 }
+ 
+                 taskList.appendChild(taskItem);
+             });
+             console.log("Long Term Tasks Loaded");
+         } else {
+             const noTasksMessage = document.createElement('p');
+             noTasksMessage.textContent = 'No Long-Term Tasks added.';
+             taskList.appendChild(noTasksMessage);
+         }
+     } catch (error) {
+         console.error('Error:', error);
+     }
+ }
+ 
+ 
+ async function addAdditionalTask() {
+     const taskInput = document.getElementById('additionalTaskInput');
+     const task = taskInput.value.trim();
+ 
+     if (task !== '') {
+         try {
+             const currentTime = new Date().toLocaleTimeString();
+ 
+             // Send the task to the backend
+             await sendRequest('add-lt-task', { task });
+ 
+             // Fetch and load tasks after adding a task
+             await loadLtTasks();
+ 
+             taskInput.value = '';
+         } catch (error) {
+             console.error('Error:', error);
+         }
+     }
+ }
+ 
+ function createLtTaskItem(task) {
+     const taskItem = document.createElement('div');
+     taskItem.className = 'taskItem';
+     taskItem.setAttribute('data-task-id', task.id); // Add data-task-id attribute
+ 
+     const taskText = document.createElement('span');
+     taskText.textContent = task.description;
+     taskText.onclick = () => enableLtTaskEditing(task.id); // Enable editing on click
+ 
+     const taskActions = document.createElement('div');
+     taskActions.className = 'taskActions';
+ 
+     const removeButton = document.createElement('button');
+     removeButton.textContent = 'Remove';
+     removeButton.setAttribute('data-task-id', task.id);
+     removeButton.onclick = removeLtTask;
+ 
+     const completeButton = document.createElement('button');
+     completeButton.textContent = 'Complete';
+     completeButton.setAttribute('data-task-id', task.id);
+     completeButton.onclick = completeLtTask;
+ 
+     taskActions.appendChild(removeButton);
+     taskActions.appendChild(completeButton);
+ 
+     taskItem.appendChild(taskText);
+     taskItem.appendChild(taskActions);
+ 
+     return taskItem;
+ }
 
-
-window.onload = loadTasks;
+ window.onload = loadTasks();
+ window.onload = loadLtTasks();
+ window.onload = updateDateDisplay();
 setInterval(updateClockDisplay, 500);
-setInterval(updateDateDisplay,500);
+setInterval(updateDateDisplay,300000);

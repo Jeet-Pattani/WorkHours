@@ -122,12 +122,12 @@ button:hover {
 }
 
 /* Additional styles for tasks */
-#taskList {
+#taskList, #additionalTaskList {
     margin-top: 20px;
     background-color: var(--main-bg);
     color: black;
     background-color: #e5eff940;
-    backdrop-filter: blur(5px);
+    backdrop-filter: blur(2px);
     padding: 10px;
     border-radius: 5px;
 }
@@ -146,8 +146,8 @@ button:hover {
 }
 
 .taskItem:hover {
-    background-color: #b0bec5; /* Darker color on hover */
-    background-color: #bebebe77; /* Darker color on hover */
+    background-color: #b0bec5;
+    background-color: #ffffff70; 
 }
 
 .taskItem span{
@@ -184,7 +184,7 @@ label {
     color: #00162F;
 }
 
-#taskInput {
+.taskInput {
     font-size: 1em;
     padding: 10px;
     width: 18%;
@@ -248,13 +248,13 @@ body.dark-mode #clockDisplay:hover {
 }
 
 /* Additional styles for tasks in dark mode */
-body.dark-mode #taskList {
+body.dark-mode #taskList, body.dark-mode #additionalTaskList {
     background-color: var(--dark-bg);
     background-color: #12121238;
-    backdrop-filter: blur(5px);
+    backdrop-filter: blur(2px);
 }
 
-body.dark-mode #taskList p{
+body.dark-mode #taskList p, body.dark-mode #additionalTaskList{
     color: white;
 }
 
@@ -300,7 +300,7 @@ body.dark-mode label{
     color: var(--dark-text);
 }
 
-body.dark-mode #taskInput {
+body.dark-mode .taskInput {
     font-size: 1em;
     padding: 10px;
     width: 18%;
@@ -393,6 +393,7 @@ body.dark-mode button#modeToggle .toggleCover {
     /* border: 1px solid #888; */
     width: 60%;
     box-shadow: 0 0 150px 4px #00000078;
+    border-radius: 5px;
 }
 
 .modal-content h3{
@@ -434,7 +435,7 @@ body.dark-mode button#modeToggle .toggleCover {
 
 
 @media (max-width:426px){
-    #taskInput{
+    .taskInput{
         width: 65%;
     }
     #taskForm{
