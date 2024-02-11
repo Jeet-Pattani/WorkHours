@@ -14,7 +14,7 @@ Directly run the app using the batch script.
 6. Change Theme with RCtrl
 7. Change Clock and Date format by Clicking
 8. Sort Tasks by Dragging
-9. Save the order of Daily and Long-Term Tasks
+9. Order of Daily and Long-Term Tasks saved in LocalStorage
 10. CRUD operations for Long-Term Tasks
 11. Update Tasks by clicking and hitting enter
 
