@@ -33,12 +33,12 @@ Directly run the app using the batch script.
 1. Clone the repository to your local machine:
 
    ```bash
-   git clone https://github.com/your-username/workhours-tracker.git
+   git clone https://github.com/Jeet-Pattani/WorkHours.git
    ```
 2. Install the packages and run the server
-  ```npm install
-   node server
-  ```
+    ```npm i
+    node server
+    ```
 3. Or Simply run the RunServer.bat file   
 
 
@@ -61,12 +61,6 @@ Directly run the app using the batch script.
 
 ### Endpoints
 
-- **GET /get-server-date-time:**
-  Get the current server date and time.
-
-- **GET /get-summary:**
-  Get a summary of the work session, including total work duration, total break duration, number of breaks, and break details.
-
 - **POST /clock-in:**
   Record the clock-in time.
 
@@ -74,28 +68,52 @@ Directly run the app using the batch script.
   Start a break.
 
 - **POST /end-break:**
-  End the ongoing break.
+  End a break.
 
 - **POST /clock-out:**
   Record the clock-out time.
 
+- **GET /get-summary:**
+  Get summary of work including work duration, break duration, and number of breaks.
+
 - **GET /get-user-status:**
-  Know if user is clocked-in,clocked-out,on-break,back-to-work,not-on-work
+  Get the user's current status (e.g., clocked-in, on break, clocked-out).
+
+- **GET /get-tasks:**
+  Get the list of tasks for the current day.
 
 - **POST /add-task:**
-  Add a new task.
-
-- **POST /update-task:**
-  Update an existing task.
-
-- **POST /complete-task:**
-  Mark a task as completed.
+  Add a new task for the current day.
 
 - **POST /remove-task:**
   Remove a task.
 
-- **GET /get-tasks:**
-  Get the list of tasks.
+- **POST /complete-task:**
+  Mark a task as completed.
+
+- **POST /update-task:**
+  Update the description of a task.
+
+- **POST /add-lt-task:**
+  Add a long-term task or note.
+
+- **POST /update-lt-task:**
+  Update the description of a long-term task.
+
+- **POST /remove-lt-task:**
+  Remove a long-term task or note.
+
+- **POST /complete-lt-task:**
+  Mark a long-term task as completed.
+
+- **GET /get-lt-tasks:**
+  Get the list of long-term tasks or notes.
+
+- **GET /get-server-time:**
+  Get the Time from server in 24/12hr format.
+
+- **GET /get-server-date:**
+  Get the date in different descriptive/numeric format.
 
 ### Folder Structure
 
