@@ -15,6 +15,7 @@ const dataFilePath = path.join(__dirname, 'data.json');
 //task.json saves the long-term tasks separately without any timestamps
 const taskFilePath = path.join(__dirname, 'data1.json');
 
+// Function to load data from a JSON file
 function loadData(filePath) {
     try {
         const data = fs.readFileSync(filePath, 'utf8');
@@ -24,11 +25,12 @@ function loadData(filePath) {
     }
 }
 
-
+// Function to save data to a JSON file
 function saveData(data, filePath) {
     fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf8');
 }
 
+// Function to get the current date and time
 function getCurrentDateTime() {
     const now = new Date();
 
@@ -54,7 +56,12 @@ function padZero(value) {
     return value < 10 ? '0' + value : value;
 }
 
+// Function to parse a date-time string
 function parseDateTimeString(dateTimeString) {
+    if (!dateTimeString) {
+        console.error('Error: DateTimeString is null or undefined.');
+        return null;
+    }
     const [date, time] = dateTimeString.split(' ');
     const [day, month, year] = date.split('/').map(Number);
     const [hours, minutes, seconds] = time.split(':').map(Number);
@@ -66,6 +73,7 @@ function parseDateTimeString(dateTimeString) {
     return new Date(year, month - 1, day, hours, minutes, seconds);
 }
 
+// Function to calculate the time difference between two date-time strings
 function calculateTimeDifferenceWithDate(startTime, endTime) {
     const start = parseDateTimeString(startTime);
     const end = parseDateTimeString(endTime);
@@ -82,10 +90,12 @@ function calculateTimeDifferenceWithDate(startTime, endTime) {
     return `${formatTime(hours)}:${formatTime(minutes)}:${formatTime(seconds)}`;
 }
 
+// Function to format time values
 function formatTime(time) {
     return time < 10 ? `0${time}` : time;
 }
 
+// Function to handle clock-in requests
 function clockIn(req, res) {
     const currentDateTime = getCurrentDateTime();
     const data = loadData(dataFilePath);
@@ -98,11 +108,12 @@ function clockIn(req, res) {
         data[today].userStatus = 'clocked-in';
     }
 
-    saveData(data,dataFilePath);
+    saveData(data, dataFilePath);
     console.log('Clock In recorded.');
     res.send('Clock In recorded.');
 }
 
+// Function to handle starting a break
 function startBreak(req, res) {
     const currentDateTime = getCurrentDateTime();
     const data = loadData(dataFilePath);
@@ -122,13 +133,13 @@ function startBreak(req, res) {
         // Start a new break
         data[today].time.breaks.push({ type: 'Start Break', time: currentDateTime });
         data[today].userStatus = 'on-break';
-        saveData(data,dataFilePath);
+        saveData(data, dataFilePath);
         console.log('Break started.');
         res.send('Break started.');
     }
 }
 
-
+// Function to handle ending a break
 function endBreak(req, res) {
     const currentDateTime = getCurrentDateTime();
     const data = loadData(dataFilePath);
@@ -141,7 +152,7 @@ function endBreak(req, res) {
 
         timeData.breaks.push({ type: 'End Break', time: currentDateTime, duration: breakDuration });
         data[today].userStatus = 'back-to-work';
-        saveData(data,dataFilePath);
+        saveData(data, dataFilePath);
         console.log(`Break ended. Break duration: ${breakDuration}`);
         res.send(`Break ended. Break duration: ${breakDuration}`);
     } else {
@@ -150,6 +161,7 @@ function endBreak(req, res) {
     }
 }
 
+// Function to handle clock-out requests
 function clockOut(req, res) {
     const currentDateTime = getCurrentDateTime();
     const data = loadData(dataFilePath);
@@ -166,7 +178,7 @@ function clockOut(req, res) {
         const workDuration = calculateTimeDifferenceWithDate(timeDataToday.clockInTime, currentDateTime);
         timeDataToday.clockOutTime = currentDateTime;
         data[today].userStatus = 'clocked-out';
-        saveData(data,dataFilePath);
+        saveData(data, dataFilePath);
         console.log(`Clock Out recorded. Work duration: ${workDuration}, Total Break duration: ${totalBreakDuration}`);
         res.send(`Clock Out recorded. Work duration: ${workDuration}, Total Break duration: ${totalBreakDuration}`);
     } else if (timeDataYesterday && timeDataYesterday.clockInTime && timeDataYesterday.clockOutTime === null) {
@@ -175,7 +187,7 @@ function clockOut(req, res) {
         const workDuration = calculateTimeDifferenceWithDate(timeDataYesterday.clockInTime, currentDateTime);
         timeDataYesterday.clockOutTime = currentDateTime;
         data[yesterdayFormatted].userStatus = 'clocked-out';
-        saveData(data,dataFilePath);
+        saveData(data, dataFilePath);
         console.log(`Clock Out recorded. Work duration: ${workDuration}, Total Break duration: ${totalBreakDuration}`);
         res.send(`Clock Out recorded. Work duration: ${workDuration}, Total Break duration: ${totalBreakDuration}`);
     } else {
@@ -184,8 +196,7 @@ function clockOut(req, res) {
     }
 }
 
-
-
+// Function to get summary of work
 function getSummary(req, res) {
     const data = loadData(dataFilePath);
     const today = new Date().toLocaleDateString();
@@ -216,7 +227,7 @@ function getSummary(req, res) {
     }
 }
 
-
+// Function to calculate total break duration
 function calculateTotalBreakDuration(breaks) {
     let totalDuration = 0;
 
@@ -238,77 +249,70 @@ function calculateTotalBreakDuration(breaks) {
     return `${formatTime(totalHours)}:${formatTime(totalMinutes)}:${formatTime(totalSeconds)}`;
 }
 
+// Function to get the server time
 function getServerTime(req, res) {
     // Check if the frontend specified the time format
     const is24HourFormat = req.query.format === '24hr';
 
     const options = {
-        // year: 'numeric',
-        // month: 'short', // You can change this to 'short', 'long', etc.
-        // day: '2-digit', // You can change this to 'numeric', 'short', 'long', etc.
         hour: '2-digit',
         minute: '2-digit',
         second: '2-digit',
         hour12: !is24HourFormat,
     };
 
-    const currentTime = new Date().toLocaleString(undefined, options);//In the toLocaleString method, the first argument is a locale string, which is typically used to specify the language and region for formatting purposes. However, in your code, the undefined is passed as the first argument. When undefined is used, the method uses the default locale of the JavaScript runtime environment.
-    // console.log("Current Server Time,",currentTime);
+    const currentTime = new Date().toLocaleString(undefined, options);
 
     res.json({ serverTime: currentTime });
 }
 
+// Function to get the server date
 function getServerDate(req, res) {
     const isLongFormat = req.query.format === 'long';
-    const option1 = {
+    const options = {
         weekday: "short",
         year: "numeric",
         month: "short",
         day: "numeric"
     }
-    const option2 = {
-        dateStyle: "short",//gives 31/01/24
-    }
-    let options = isLongFormat ? option1 : option2;
-    const currentDate = new Date().toLocaleString(undefined, options);
-    //  console.log("Current Server Date,",currentDate);
+    const currentDate = new Date().toLocaleString(undefined, isLongFormat ? options : { dateStyle: "short" });
 
     res.json({ serverDate: currentDate });
 }
 
-//Function to add long term tasks
-function addLtTask(req, res){
+// Function to add long term tasks
+function addLtTask(req, res) {
     const currentTime = new Date().toLocaleTimeString();
     const data = loadData(taskFilePath)
     const taskInput = req.body.task;
-    
-        // Determine the taskIdCounter based on existing tasks
-        let lastTaskIdCounter = 0;
-        const lastTask = data[data.length - 1];
-    
-        if (lastTask) {
-            const lastTaskId = lastTask.id;
-            const lastTaskIdParts = lastTaskId.split('t');
-            lastTaskIdCounter = parseInt(lastTaskIdParts[1]) + 1;
-        } else {
-            // If tasks array is empty, set taskIdCounter to 1
-            lastTaskIdCounter = 1;
-        }
-    
-        // Set the taskIdCounter for generating the new taskId
-        taskIdCounter = lastTaskIdCounter;
-    
-        const today_ForTaskID = new Date();
-        const formattedDate = `${today_ForTaskID.getDate()}${today_ForTaskID.getMonth() + 1}${today_ForTaskID.getFullYear()}`;
-        const taskId = `${formattedDate}t${taskIdCounter}`;
-    
-        data.push({ id: taskId, description: taskInput, timeAdded: currentTime, timeCompleted: null, completed: false });
-        saveData(data,taskFilePath);
 
-        res.send("Long Term Notes/Tasks Added.")
-    
+    // Determine the taskIdCounter based on existing tasks
+    let lastTaskIdCounter = 0;
+    const lastTask = data[data.length - 1];
+
+    if (lastTask) {
+        const lastTaskId = lastTask.id;
+        const lastTaskIdParts = lastTaskId.split('LtT');
+        lastTaskIdCounter = parseInt(lastTaskIdParts[1]) + 1;
+    } else {
+        // If tasks array is empty, set taskIdCounter to 1
+        lastTaskIdCounter = 1;
+    }
+
+    // Set the taskIdCounter for generating the new taskId
+    taskIdCounter = lastTaskIdCounter;
+
+    const today_ForTaskID = new Date();
+    const formattedDate = `${today_ForTaskID.getDate()}${today_ForTaskID.getMonth() + 1}${today_ForTaskID.getFullYear()}`;
+    const taskId = `${formattedDate}LtT${taskIdCounter}`;
+
+    data.push({ id: taskId, description: taskInput, timeAdded: currentTime, timeCompleted: null, completed: false });
+    saveData(data, taskFilePath);
+
+    res.send("Long Term Notes/Tasks Added.")
 }
 
+// Function to remove long term tasks
 function removeLtTask(req, res) {
     const taskId = req.body.taskId;
     let data = loadData(taskFilePath);
@@ -330,11 +334,13 @@ function removeLtTask(req, res) {
     saveData(data, taskFilePath);
 }
 
-function getLtTasks(req, res){
+// Function to get long term tasks
+function getLtTasks(req, res) {
     const data = loadData(taskFilePath);
     res.json(data)
 }
 
+// Function to mark long term task as completed
 function completeLtTask(req, res) {
     const taskId = req.body.taskId;
     const data = loadData(taskFilePath);
@@ -352,6 +358,7 @@ function completeLtTask(req, res) {
     }
 }
 
+// Function to update long term task
 function updateLtTask(req, res) {
     const taskId = req.body.taskId;
     const data = loadData(taskFilePath);
@@ -360,7 +367,6 @@ function updateLtTask(req, res) {
     const task = data.find(task => task.id === taskId);
 
     if (task) {
-        console.log("Current Description is" + task.description);
         task.description = req.body.updatedTask;
         console.log("Task Description Updated.")
         saveData(data, taskFilePath);
@@ -371,6 +377,7 @@ function updateLtTask(req, res) {
     }
 }
 
+// Function to add task
 function addTask(req, res) {
     const currentTime = new Date().toLocaleTimeString();
     const data = loadData(dataFilePath);
@@ -403,12 +410,12 @@ function addTask(req, res) {
     const taskId = `${formattedDate}t${taskIdCounter}`;
 
     data[today].tasks.push({ id: taskId, timeAdded: currentTime, task, timeCompleted: null, completed: false });
-    saveData(data,dataFilePath);
+    saveData(data, dataFilePath);
 
     res.send('Task added.');
 }
 
-
+// Function to update task
 function updateTask(req, res) {
     const { taskId, updatedTask } = req.body;
     const data = loadData(dataFilePath);
@@ -422,13 +429,14 @@ function updateTask(req, res) {
 
     if (task) {
         task.task = updatedTask;
-        saveData(data,dataFilePath);
+        saveData(data, dataFilePath);
         // res.send('Task updated.');
     } else {
         res.status(400).send('Error: Task not found.');
     }
 }
 
+// Function to mark task as completed
 function completeTask(req, res) {
     const currentTime = new Date().toLocaleTimeString();
     const data = loadData(dataFilePath);
@@ -444,13 +452,14 @@ function completeTask(req, res) {
     if (task) {
         task.completed = true;
         task.timeCompleted = currentTime;
-        saveData(data,dataFilePath);
+        saveData(data, dataFilePath);
         res.send('Task completed.');
     } else {
         res.status(400).send('Error: Task not found.');
     }
 }
 
+// Function to remove task
 async function removeTask(req, res) {
     try {
         const { taskId } = req.body;
@@ -475,7 +484,7 @@ async function removeTask(req, res) {
         }
 
         // Save the updated tasks to data.json
-        await saveData(data,dataFilePath);
+        await saveData(data, dataFilePath);
 
         res.json('Task removed successfully');
     } catch (error) {
@@ -484,7 +493,7 @@ async function removeTask(req, res) {
     }
 }
 
-
+// Function to get user status
 function getUserStatus(req, res) {
     const data = loadData(dataFilePath);
     const today = new Date().toLocaleDateString();
@@ -504,8 +513,7 @@ function getUserStatus(req, res) {
     }
 }
 
-
-
+// Function to get tasks
 function getTasks(req, res) {
     const data = loadData(dataFilePath);
     const today = new Date().toLocaleDateString();
@@ -518,6 +526,13 @@ function getTasks(req, res) {
     }
 }
 
+// Middleware to log requests
+app.use((req, res, next) => {
+    console.log(`Received ${req.method} request for ${req.url}`);
+    next();
+});
+
+// Routes
 app.get('/get-server-time', getServerTime);
 app.get('/get-server-date', getServerDate);
 app.post('/clock-in', clockIn);
@@ -531,12 +546,19 @@ app.post('/add-task', addTask);
 app.post('/remove-task', removeTask);
 app.post('/complete-task', completeTask);
 app.post('/update-task', updateTask);
-app.post('/add-lt-task',addLtTask);
-app.post('/update-lt-task',updateLtTask);
-app.post('/remove-lt-task',removeLtTask);
-app.post('/complete-lt-task',completeLtTask);
-app.get('/get-lt-tasks',getLtTasks);
+app.post('/add-lt-task', addLtTask);
+app.post('/update-lt-task', updateLtTask);
+app.post('/remove-lt-task', removeLtTask);
+app.post('/complete-lt-task', completeLtTask);
+app.get('/get-lt-tasks', getLtTasks);
 
+// Middleware to log errors
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Something broke!');
+});
+
+// Start the server
 app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
+    console.log(`Server is listening on port ${port}`);
 });

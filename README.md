@@ -11,10 +11,12 @@ Directly run the app using the batch script.
 3. Simple Click and Run
 4. Detailed Summary of time logs
 5. CRUD operations for tasks
-6. Change Mode with RCtrl
-7. Change Clock Time format by Clicking
+6. Change Theme with RCtrl
+7. Change Clock and Date format by Clicking
 8. Sort Tasks by Dragging
-9. Update Tasks by clicking and hitting enter
+9. Save the order of Daily and Long-Term Tasks
+10. CRUD operations for Long-Term Tasks
+11. Update Tasks by clicking and hitting enter
 
 ### Table of Contents
 

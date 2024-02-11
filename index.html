@@ -18,7 +18,7 @@
 </head>
 
 <body>
-    <div>
+    <div class="main-container">
         <!-- Modal -->
         <div id="summaryModal" class="modal">
             <div class="modal-content">
@@ -89,18 +89,40 @@
 
         <!-- Additional Task section -->
         <div id="additionalTasks">
-            <h2>Additional Tasks</h2>
+            <h2>Long-Term Tasks</h2>
             <form id="additionalTaskForm">
                 <span class="inputGroup">
-                    <label for="additionalTaskInput">Add Task :</label>
+                    <label for="additionalTaskInput">Task :</label>
                     <input type="text" id="additionalTaskInput" class="taskInput" name="additionalTaskInput"
-                        placeholder="Enter Additional Task" required>
+                        placeholder="Enter Long-Term Task" required>
                 </span>
-                <button type="button" onclick="addAdditionalTask()"> Add Additional Task</button>
+                <button type="button" onclick="addLtTask()"> Add Task</button>
             </form>
         </div>
             <!-- Additional Task list -->
             <div id="additionalTaskList"></div>
+            <style>
+                #additionalTasks{
+                    margin-top: 4rem;
+                }
+                #additionalTaskList .taskItem{
+                    flex-direction: column;
+                    row-gap: 3rem;
+                }
+
+                /* #additionalTaskList .taskItem span{
+                    text-align: center!important;
+                } */
+
+                #additionalTaskList {
+        /* display: grid; */
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Adjust minmax() values as needed */
+        gap: 1rem;
+        justify-items: center;
+                }
+            </style>
+
+
     </div>
     <script src="js/axios.min.js"></script>
     <script src="js/Sortable.min.js"></script>

@@ -49,6 +49,9 @@ function enableTaskEditing(taskId) {
 function enableLtTaskEditing(taskId) {
     const taskText = document.querySelector(`.taskItem[data-task-id="${taskId}"] > span`);
 
+    // Remove existing event listener
+    taskText.removeEventListener('keydown', taskText.keydownListener);
+
     // Set contenteditable to true
     taskText.contentEditable = true;
 
@@ -56,7 +59,7 @@ function enableLtTaskEditing(taskId) {
     taskText.focus();
 
     // Add a keydown event listener to detect Enter key
-    taskText.addEventListener('keydown', function (event) {
+    taskText.keydownListener = function(event) {
         if (event.key === 'Enter') {
             // Prevent the default Enter behavior (e.g., new line)
             event.preventDefault();
@@ -67,8 +70,11 @@ function enableLtTaskEditing(taskId) {
             // Call the updateTask function with the new task description
             updateLtTask(taskId, taskText.textContent.trim());
         }
-    });
+    };
+
+    taskText.addEventListener('keydown', taskText.keydownListener);
 }
+
 
 // Modify the createTaskItem function to include the onclick event for editing
 function createTaskItem(task) {
@@ -111,21 +117,36 @@ async function loadTasks() {
 
         const taskList = document.getElementById('taskList');
         taskList.innerHTML = ''; // Clear existing content
-
+        //console.log(tasks.length)
         if (tasks && tasks.length > 0) {
-            //taskIdCounter = tasks.length + 1;
+            // Load the sorted order from local storage
+            const sortedOrder = JSON.parse(localStorage.getItem('taskListOrder'));
+            //console.log("sortedOrder from script.js",sortedOrder)
+            // Create a map to store task items by their IDs
+            const taskItemsMap = new Map();
             tasks.forEach(task => {
                 const taskItem = createTaskItem(task);
-
-                // Check if the task is completed
-                if (task.completed) {
-                    // Apply style with strike-through
-                    const taskDescription = taskItem.querySelector('.taskItem span');
-                    taskDescription.style.textDecoration = 'line-through';
-                }
-
-                taskList.appendChild(taskItem);
+                taskItemsMap.set(task.id, taskItem);
+               // console.log(taskItem)
             });
+
+            // Append task items to the list in the sorted order
+            if (sortedOrder) {
+                sortedOrder.order.forEach(id => {
+                    const taskItem = taskItemsMap.get(id);
+                    if (taskItem) {
+                        taskList.appendChild(taskItem);
+                    }
+                });
+            } else {
+                // If no sorted order found, append task items in the order of tasks array
+                tasks.forEach(task => {
+                    const taskItem = taskItemsMap.get(task.id);
+                    if (taskItem) {
+                        taskList.appendChild(taskItem);
+                    }
+                });
+            }
         } else {
             const noTasksMessage = document.createElement('p');
             noTasksMessage.textContent = 'No tasks added.';
@@ -135,6 +156,7 @@ async function loadTasks() {
         console.error('Error:', error);
     }
 }
+
 
 
 async function removeTask() {
@@ -286,7 +308,7 @@ async function updateLtTask(taskId, updatedTask) {
 // Function to open the modal and update its content
 function openModal(summary) {
     const modal = document.getElementById('summaryModal');
-    modal.style.display = 'block';
+    modal.style.display = 'grid';
 
     // Update modal content
     document.getElementById('TotalWorkDuration').textContent = `Total Work Duration: ${summary.TotalWorkDuration || 'N/A'}`;
@@ -354,9 +376,6 @@ summary.BreakDetails.forEach((breakDetail, index) => {
     }
 }
 
-
-
-
 // Function to close the modal
 function closeModal() {
     const modal = document.getElementById('summaryModal');
@@ -381,21 +400,36 @@ async function loadLtTasks() {
          const taskList = document.getElementById('additionalTaskList');
          taskList.innerHTML = ''; // Clear existing content
          if (tasks && tasks.length > 0) {
-             //taskIdCounter = tasks.length + 1;
-             tasks.forEach((task,index) => {
+             // Load the sorted order from local storage
+             const sortedOrder = JSON.parse(localStorage.getItem('additionalTaskListOrder'));
+             
+             // Create a map to store task items by their IDs
+             const taskItemsMap = new Map();
+             tasks.forEach(task => {
                  const taskItem = createLtTaskItem(task);
-                 // Check if the task is completed
-                 if (task.completed) {
-                     // Apply style with strike-through
-                     const taskDescription = taskItem.querySelector('.taskItem span');
-                     taskDescription.style.textDecoration = 'line-through';
-                 }
- 
-                 taskList.appendChild(taskItem);
+                 taskItemsMap.set(task.id, taskItem);
              });
-             console.log("Long Term Tasks Loaded");
+
+             // Append task items to the list in the sorted order
+             if (sortedOrder) {
+                 sortedOrder.forEach(id => {
+                     const taskItem = taskItemsMap.get(id);
+                     if (taskItem) {
+                         taskList.appendChild(taskItem);
+                     }
+                 });
+             } else {
+                 // If no sorted order found, append task items in the order of tasks array
+                 tasks.forEach(task => {
+                     const taskItem = taskItemsMap.get(task.id);
+                     if (taskItem) {
+                         taskList.appendChild(taskItem);
+                     }
+                 });
+             }
          } else {
              const noTasksMessage = document.createElement('p');
+             noTasksMessage.setAttribute('id', 'noTasksMessageId');
              noTasksMessage.textContent = 'No Long-Term Tasks added.';
              taskList.appendChild(noTasksMessage);
          }
@@ -403,9 +437,10 @@ async function loadLtTasks() {
          console.error('Error:', error);
      }
  }
+
  
  
- async function addAdditionalTask() {
+ async function addLtTask() {
      const taskInput = document.getElementById('additionalTaskInput');
      const task = taskInput.value.trim();
  
@@ -425,6 +460,28 @@ async function loadLtTasks() {
          }
      }
  }
+
+ document.getElementById("additionalTaskInput").addEventListener("keydown", (e) => {
+    // Check if the Enter key is pressed
+    if (e.key === "Enter") {
+        // Prevent the default form submission behavior
+        e.preventDefault();
+        
+        // Call the addLtTask() function
+        addLtTask();
+    }
+});
+
+document.getElementById("taskInput").addEventListener("keydown", (e) => {
+    // Check if the Enter key is pressed
+    if (e.key === "Enter") {
+        // Prevent the default form submission behavior
+        e.preventDefault();
+        
+        // Call the addLtTask() function
+        addTask();
+    }
+});
  
  function createLtTaskItem(task) {
      const taskItem = document.createElement('div');
@@ -462,3 +519,74 @@ async function loadLtTasks() {
  window.onload = updateDateDisplay();
 setInterval(updateClockDisplay, 500);
 setInterval(updateDateDisplay,300000);
+
+
+
+
+
+function checkParagraphCount() {
+    const additionalTaskList = document.getElementById('additionalTaskList');
+    const paragraphCount = additionalTaskList.querySelectorAll('p').length;
+    //console.log(paragraphCount);
+
+    if (paragraphCount === 1) {
+        additionalTaskList.style.display = 'block';
+    } else {
+        // additionalTaskList.style.backgroundColor = 'transparent';
+        additionalTaskList.style.display = 'grid';
+    }
+}
+
+window.addEventListener('load', function() {
+    loadTasks();
+    loadLtTasks();
+    updateDateDisplay();
+    checkParagraphCount();
+});
+
+
+/* document.addEventListener('DOMContentLoaded', function () {
+    // Initialize sortable library
+    new Sortable(document.getElementById('taskList'), {
+        animation: 150,
+    });
+});
+
+
+document.addEventListener('DOMContentLoaded', function () {
+    const additionalTaskList = document.getElementById('additionalTaskList');
+
+    // Initialize sortable library for additional task list
+    const sortableAdditionalTaskList = new Sortable(additionalTaskList, {
+        animation: 150,
+        onUpdate: function () {
+            saveSortableOrder(additionalTaskList, 'additionalTaskListOrder');
+        }
+    });
+
+    // Function to save sortable order to local storage
+    function saveSortableOrder(list, key) {
+        const order = Array.from(list.children).map(item => item.getAttribute('data-task-id'));
+        localStorage.setItem(key, JSON.stringify(order));
+        console.log("saveSortableOrder is: ", order);
+    }
+
+    // Function to load sortable order from local storage
+    function loadSortableOrder(list, key) {
+        const order = JSON.parse(localStorage.getItem(key));
+        console.log("loadSortableOrder is: ", order);
+        if (order) {
+            order.forEach(id => {
+                const item = document.querySelector(`.taskItem[data-task-id="${id}"]`);
+                if (item) {
+                    // Append the item to the list according to the saved order
+                    list.appendChild(item);
+                }
+            });
+        }
+    }
+
+    // Load sortable order for additional task list
+    loadSortableOrder(additionalTaskList, 'additionalTaskListOrder');
+}); */
+

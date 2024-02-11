@@ -1,172 +1,39 @@
 {
-  "30/1/2024": {
+  "11/2/2024": {
     "time": {
-      "clockInTime": "30/01/2024 13:16:55",
-      "breaks": [
-        {
-          "type": "Start Break",
-          "time": "30/01/2024 12:54:14"
-        },
-        {
-          "type": "End Break",
-          "time": "30/01/2024 12:54:17",
-          "duration": "00:00:03"
-        },
-        {
-          "type": "Start Break",
-          "time": "30/01/2024 12:54:21"
-        },
-        {
-          "type": "End Break",
-          "time": "30/01/2024 12:54:25",
-          "duration": "00:00:04"
-        },
-        {
-          "type": "Start Break",
-          "time": "30/01/2024 12:54:29"
-        },
-        {
-          "type": "End Break",
-          "time": "30/01/2024 12:54:31",
-          "duration": "00:00:02"
-        },
-        {
-          "type": "Start Break",
-          "time": "30/01/2024 12:54:33"
-        },
-        {
-          "type": "End Break",
-          "time": "30/01/2024 12:54:37",
-          "duration": "00:00:04"
-        },
-        {
-          "type": "Start Break",
-          "time": "30/01/2024 12:54:42"
-        },
-        {
-          "type": "End Break",
-          "time": "30/01/2024 12:54:45",
-          "duration": "00:00:03"
-        }
-      ],
+      "clockInTime": null,
+      "breaks": [],
       "clockOutTime": null
     },
     "tasks": [
       {
-        "id": "3012024t1",
-        "timeAdded": "3:27:41 pm",
-        "task": "Task 1 Desc",
+        "id": "1122024t1",
+        "timeAdded": "4:18:50 pm",
+        "task": "Task 1",
         "timeCompleted": null,
         "completed": false
       },
       {
-        "id": "3012024t2",
-        "timeAdded": "3:27:47 pm",
-        "task": "Task 2 Description",
+        "id": "1122024t2",
+        "timeAdded": "4:18:56 pm",
+        "task": "Task 2",
+        "timeCompleted": null,
+        "completed": false
+      },
+      {
+        "id": "1122024t3",
+        "timeAdded": "4:18:59 pm",
+        "task": "Task 3",
+        "timeCompleted": null,
+        "completed": false
+      },
+      {
+        "id": "1122024t7",
+        "timeAdded": "4:19:09 pm",
+        "task": "task7",
         "timeCompleted": null,
         "completed": false
       }
-    ],
-    "userStatus": "clocked-in"
-  },
-  "31/1/2024": {
-    "time": {
-      "clockInTime": "31/01/2024 12:07:20",
-      "breaks": [
-        {
-          "type": "Start Break",
-          "time": "31/01/2024 12:07:04"
-        },
-        {
-          "type": "End Break",
-          "time": "31/01/2024 12:07:06",
-          "duration": "00:00:02"
-        },
-        {
-          "type": "Start Break",
-          "time": "31/01/2024 12:07:26"
-        },
-        {
-          "type": "End Break",
-          "time": "31/01/2024 12:07:28",
-          "duration": "00:00:02"
-        },
-        {
-          "type": "Start Break",
-          "time": "31/01/2024 12:07:30"
-        }
-      ],
-      "clockOutTime": "31/01/2024 12:07:10"
-    },
-    "tasks": [],
-    "userStatus": "on-break"
-  },
-  "10/2/2024": {
-    "time": {
-      "clockInTime": "10/02/2024 01:33:26",
-      "breaks": [
-        {
-          "type": "Start Break",
-          "time": "10/02/2024 01:33:30"
-        },
-        {
-          "type": "End Break",
-          "time": "10/02/2024 01:33:33",
-          "duration": "00:00:03"
-        },
-        {
-          "type": "Start Break",
-          "time": "10/02/2024 01:33:42"
-        },
-        {
-          "type": "End Break",
-          "time": "10/02/2024 01:33:45",
-          "duration": "00:00:03"
-        },
-        {
-          "type": "Start Break",
-          "time": "10/02/2024 01:33:50"
-        },
-        {
-          "type": "End Break",
-          "time": "10/02/2024 01:33:53",
-          "duration": "00:00:03"
-        },
-        {
-          "type": "Start Break",
-          "time": "10/02/2024 01:33:57"
-        },
-        {
-          "type": "End Break",
-          "time": "10/02/2024 01:34:02",
-          "duration": "00:00:05"
-        }
-      ],
-      "clockOutTime": "10/02/2024 01:34:04"
-    },
-    "tasks": [
-      {
-        "id": "1022024t1",
-        "timeAdded": "12:59:38 am",
-        "task": "Demo Task 1",
-        "timeCompleted": null,
-        "completed": false
-      },
-      {
-        "id": "1022024t2",
-        "timeAdded": "12:59:45 am",
-        "task": "Demo Task 2 Description",
-        "timeCompleted": null,
-        "completed": false
-      },
-      {
-        "id": "1022024t3",
-        "timeAdded": "12:59:54 am",
-        "task": "Demo Task 3 Description",
-        "timeCompleted": null,
-        "completed": false
-      }
-    ],
-    "userStatus": "clocked-out"
+    ]
   }
 }

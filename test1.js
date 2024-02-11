@@ -1,3 +1,0 @@
-
-
-const currentDateTime = getCurrentDateTime();
