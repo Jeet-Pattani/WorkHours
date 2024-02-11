@@ -1,18 +1,25 @@
 {
   "11/2/2024": {
     "time": {
-      "clockInTime": null,
-      "breaks": [],
-      "clockOutTime": null
+      "clockInTime": "11/02/2024 17:57:00",
+      "breaks": [
+        {
+          "type": "Start Break",
+          "time": "11/02/2024 17:50:33"
+        },
+        {
+          "type": "End Break",
+          "time": "11/02/2024 17:50:36",
+          "duration": "00:00:03"
+        },
+        {
+          "type": "Start Break",
+          "time": "11/02/2024 17:55:02"
+        }
+      ],
+      "clockOutTime": "11/02/2024 17:50:37"
     },
     "tasks": [
-      {
-        "id": "1122024t1",
-        "timeAdded": "4:18:50 pm",
-        "task": "Task 1",
-        "timeCompleted": null,
-        "completed": false
-      },
       {
         "id": "1122024t2",
         "timeAdded": "4:18:56 pm",
@@ -33,7 +40,15 @@
         "task": "task7",
         "timeCompleted": null,
         "completed": false
+      },
+      {
+        "id": "1122024t8",
+        "timeAdded": "5:56:25 pm",
+        "task": "Task 1",
+        "timeCompleted": null,
+        "completed": false
       }
-    ]
+    ],
+    "userStatus": "clocked-in"
   }
 }

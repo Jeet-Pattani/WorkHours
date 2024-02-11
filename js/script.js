@@ -545,48 +545,41 @@ window.addEventListener('load', function() {
 });
 
 
-/* document.addEventListener('DOMContentLoaded', function () {
-    // Initialize sortable library
-    new Sortable(document.getElementById('taskList'), {
-        animation: 150,
-    });
-});
+// on frontend userStatus.js:
+const clockInBtn = document.getElementById('clockInButton');
+const clockOutBtn = document.getElementById('clockOutButton');
+const startBreakBtn = document.getElementById('startBreakButton');
+const endBreakBtn = document.getElementById('endBreakButton');
 
+// Function to fetch user status from the server and update the UI
+async function updateUserStatus() {
+  try {
+    const response = await axios.get('http://192.168.1.7:3000/get-user-status');
+    const userStatus = transformUserStatus(response.data.userStatus);
 
-document.addEventListener('DOMContentLoaded', function () {
-    const additionalTaskList = document.getElementById('additionalTaskList');
+    // Update the UI based on the user status
+    const statusIndicator = document.getElementById('statusIndicator');
+    statusIndicator.textContent = `Status: ${userStatus}`;
 
-    // Initialize sortable library for additional task list
-    const sortableAdditionalTaskList = new Sortable(additionalTaskList, {
-        animation: 150,
-        onUpdate: function () {
-            saveSortableOrder(additionalTaskList, 'additionalTaskListOrder');
-        }
-    });
+    // Save the current state to localStorage
+    localStorage.setItem('userStatus', userStatus);
+  } catch (error) {
+    console.error('Error getting user status:', error);
+  }
+}
 
-    // Function to save sortable order to local storage
-    function saveSortableOrder(list, key) {
-        const order = Array.from(list.children).map(item => item.getAttribute('data-task-id'));
-        localStorage.setItem(key, JSON.stringify(order));
-        console.log("saveSortableOrder is: ", order);
-    }
+// Function to transform user status text
+function transformUserStatus(status) {
+  return status
+    ? status.replace(/-/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase())
+    : 'Not at Work';
+}
 
-    // Function to load sortable order from local storage
-    function loadSortableOrder(list, key) {
-        const order = JSON.parse(localStorage.getItem(key));
-        console.log("loadSortableOrder is: ", order);
-        if (order) {
-            order.forEach(id => {
-                const item = document.querySelector(`.taskItem[data-task-id="${id}"]`);
-                if (item) {
-                    // Append the item to the list according to the saved order
-                    list.appendChild(item);
-                }
-            });
-        }
-    }
+// Fetch user status and update UI on page load
+updateUserStatus();
 
-    // Load sortable order for additional task list
-    loadSortableOrder(additionalTaskList, 'additionalTaskListOrder');
-}); */
-
+// Add a single event listener for all buttons
+clockInBtn.addEventListener('click', updateUserStatus);
+clockOutBtn.addEventListener('click', updateUserStatus);
+startBreakBtn.addEventListener('click', updateUserStatus);
+endBreakBtn.addEventListener('click', updateUserStatus);

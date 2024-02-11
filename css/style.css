@@ -454,6 +454,15 @@ body.dark-mode button#modeToggle .toggleCover {
             justify-content: center;
         }
     }
+    .modal-content{
+        width: auto;
+    }
+    #breakDetailsTable{
+        overflow-x: scroll;
+    }
+    #summaryModal{
+        overflow-x:auto;
+    }
     
     .taskInput{
         width: auto;
@@ -474,12 +483,6 @@ body.dark-mode button#modeToggle .toggleCover {
     }
     .inputGroup{
         margin-top: 0.7rem;
-    }
-    .modal-content{
-        width: 90%;
-    }
-    #breakDetailsTable{
-        overflow-x: scroll;
     }
 }
 

@@ -4,6 +4,8 @@ WorkHours is a simple time and task tracking application built using Node.js and
 
 ### Features
 
+Directly run the app using the batch script.
+
 1. No Database
 2. Runs Locally
 3. Simple Click and Run
