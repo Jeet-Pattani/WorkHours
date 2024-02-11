@@ -4,8 +4,6 @@ WorkHours is a simple time and task tracking application built using Node.js and
 
 ### Features
 
-Directly run the app using the batch script.
-
 1. No Database
 2. Runs Locally
 3. Simple Click and Run
@@ -21,6 +19,7 @@ Directly run the app using the batch script.
 ### Table of Contents
 
 - [Installation](#installation)
+- [Warning](#Warning)
 - [Usage](#usage)
 - [Endpoints](#endpoints)
 - [Folder Structure](#folder-structure)
@@ -33,9 +32,16 @@ Directly run the app using the batch script.
 
    ```bash
    git clone https://github.com/your-username/workhours-tracker.git
-   npm install
-   node server
    ```
+2. Install the packages and run the server
+  ```npm install
+   node server
+  ```
+3. Or Simply run the RunServer.bat file   
+
+
+### Warning
+For proper functionality, ensure you modify the IP address in script.js to match your machine's IP or use 'localhost' if running locally. Replace '192.168.1.7' with 'localhost' if you're working solely on your laptop. Use the local IP for mobile devices and machines on the same network to access the app.
 
 #### Run using the shortcut
 

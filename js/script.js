@@ -112,7 +112,7 @@ function createTaskItem(task) {
 
 async function loadTasks() {
     try {
-        const response = await axios.get('http://localhost:3000/get-tasks');
+        const response = await axios.get('http://192.168.1.7:3000/get-tasks');
         const tasks = response.data.tasks;
 
         const taskList = document.getElementById('taskList');
@@ -195,7 +195,7 @@ async function completeLtTask() {
 
 async function getServerTime(timeFormat) {
     try {
-        const response = await axios.get(`http://localhost:3000/get-server-time?format=${timeFormat}`);
+        const response = await axios.get(`http://192.168.1.7:3000/get-server-time?format=${timeFormat}`);
         return response.data.serverTime;
     } catch (error) {
         console.error('Error:', error);
@@ -205,7 +205,7 @@ async function getServerTime(timeFormat) {
 
 async function getServerDate(dateFormat){
     try{
-        const response = await axios.get(`http://localhost:3000/get-server-date?format=${dateFormat}`);
+        const response = await axios.get(`http://192.168.1.7:3000/get-server-date?format=${dateFormat}`);
         return response.data.serverDate
     } catch(error){
         console.error('Error:',error);
@@ -258,7 +258,7 @@ async function updateDateDisplay(){
 
 async function sendRequest(action, data = {}) {
     try {
-        const response = await axios.post(`http://localhost:3000/${action}`, data, {
+        const response = await axios.post(`http://192.168.1.7:3000/${action}`, data, {
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -384,7 +384,7 @@ function closeModal() {
 
 document.getElementById('getSummary').addEventListener('click', async () => {
     try {
-        const response = await axios.get('http://localhost:3000/get-summary');
+        const response = await axios.get('http://192.168.1.7:3000/get-summary');
         openModal(response.data);
        // console.log(response)
     } catch (error) {
@@ -394,7 +394,7 @@ document.getElementById('getSummary').addEventListener('click', async () => {
 
 async function loadLtTasks() {
     try {
-         const response = await axios.get('http://localhost:3000/get-lt-tasks');
+         const response = await axios.get('http://192.168.1.7:3000/get-lt-tasks');
          const tasks = response.data;
  
          const taskList = document.getElementById('additionalTaskList');
